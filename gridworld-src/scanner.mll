@@ -17,6 +17,7 @@ rule token = parse
 (* Arithmetic operators *)
 | '+' { PLUS }   | '-' { MINUS }
 | '*' { TIMES }  | '/' { DIVIDE }
+| '%' { MOD }
 
 (* Logic operators *)
 | "==" { EQ }    | "!=" { NEQ }   

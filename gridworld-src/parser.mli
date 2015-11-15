@@ -3,8 +3,8 @@ type token =
   | RPAREN
   | LBRACE
   | RBRACE
-  | LSQUAR
-  | RSQUAR
+  | LBRACKET
+  | RBRACKET
   | SEMI
   | COLON
   | GET
@@ -17,6 +17,7 @@ type token =
   | DIVIDE
   | PERCENT
   | EXP
+  | MOD
   | EQ
   | NEQ
   | LT
