@@ -55,8 +55,6 @@ stmt:
 	PRINT LPAREN expr RPAREN SEMI { Print($3) }
 	| IF LPAREN expr RPAREN stmt ELSE stmt { If($3, $5, $7)}
 	| WHILE LPAREN expr RPAREN stmt { While($3, $5) }
-	| BREAK SEMI  { Break }
-	| CONTINUE SEMI  { Continue }
 	| RETURN expr SEMI { Return($2) }
 
 expr:
