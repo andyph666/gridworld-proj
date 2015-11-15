@@ -26,7 +26,7 @@
 %start program
 %type <Ast.program> program
 %%
-
+/*change*/
 program:
 	/* nothing */ { [], [] }
  	| program decl { ($2 :: fst $1), snd $1 }
