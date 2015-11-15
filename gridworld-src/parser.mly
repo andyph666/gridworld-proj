@@ -41,21 +41,6 @@ fdecl:
 		body = List.rev $7
 		}}
 		
-/*
-mytypes:
-	int {Int}
-vdecl:
- mytypes ID SEMI
-  {{ 
-	vtype = $1;
-	vname = $2 }}
-
-fullvdecl:
- mytypes ID ASSIGN expr SEMI 
- {{ 
-	fvtype = $1;
-	fvname = $2;
-	fvexpr = $4 }}*/
 		  
 params_opt:
       /* nothing */ { [] }
