@@ -3,8 +3,8 @@ type token =
   | RPAREN
   | LBRACE
   | RBRACE
-  | LSQUAR
-  | RSQUAR
+  | LBRACKET
+  | RBRACKET
   | SEMI
   | COLON
   | GET
@@ -53,8 +53,8 @@ let yytransl_const = [|
   258 (* RPAREN *);
   259 (* LBRACE *);
   260 (* RBRACE *);
-  261 (* LSQUAR *);
-  262 (* RSQUAR *);
+  261 (* LBRACKET *);
+  262 (* RBRACKET *);
   263 (* SEMI *);
   264 (* COLON *);
   265 (* GET *);
@@ -210,8 +210,8 @@ let yynames_const = "\
   RPAREN\000\
   LBRACE\000\
   RBRACE\000\
-  LSQUAR\000\
-  RSQUAR\000\
+  LBRACKET\000\
+  RBRACKET\000\
   SEMI\000\
   COLON\000\
   GET\000\
