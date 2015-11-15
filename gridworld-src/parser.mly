@@ -28,26 +28,24 @@ program:
  	| program decl { ($2 :: fst $1), snd $1 }
  	| program stmt { fst $1, ($2 :: snd $1) }
 
-   	
-
 decl:
 	fdecl { $1 }
 
 fdecl:
-	FUNCTION ID LPAREN paras_opt RPAREN LBRACE stmt_list RBRACE 
+	FUNCTION ID LPAREN params_opt RPAREN LBRACE stmt_list RBRACE 
 	{{
 		fname = $2;
 		params = $4;
 		body = List.rev $7
 		}}
 
-paras_opt:
+params_opt:
       /* nothing */ { [] }
-  	| paras_list   { List.rev $1 }
+  	| params_list   { List.rev $1 }
 
-paras_list:
+params_list:
    	  ID COLON TYPE              	 { [$1] }
-  	| paras_list COMMA ID COLON TYPE { $3 :: $1 }
+  	| params_list COMMA ID COLON TYPE { $3 :: $1 }
 
 stmt_list:
       /* nothing */  { [] }
