@@ -31,7 +31,6 @@ program:
 
 decl:
 	fdecl { $1 }
-	|vdecl {$1}
 
 fdecl:
 	FUNCTION ID LPAREN params_opt RPAREN LBRACE stmt_list RBRACE 
