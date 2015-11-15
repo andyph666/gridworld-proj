@@ -29,7 +29,7 @@ let translate (declarations, statements) =
 	  | Binop(e1, op, e2) ->
 	      string_of_expr e1 ^ " " ^
 	      (match op with
-			Add -> "+" | Sub -> "-" | Mult -> "*" | Div -> "/"
+			Add -> "+" | Sub -> "-" | Mult -> "*" | Div -> "/"| Mod -> "%"
 	      | Equal -> "==" | Neq -> "!="
 	      | Less -> "<" | Leq -> "<=" | Greater -> ">" | Geq -> ">=") ^ " " ^
 	      string_of_expr e2
