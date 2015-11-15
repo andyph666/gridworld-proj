@@ -24,12 +24,11 @@
 %%
 
 program:
-	bodies { $1 }
+	/* nothing */ { [], [] }
+ 	| program decl { ($2 :: fst $1), snd $1 }
+ 	| program stmt { fst $1, ($2 :: snd $1) }
 
-bodies:
-   	/* nothing */ { [], [] }
- 	| bodies decl { ($2 :: fst $1), snd $1 }
- 	| bodies stmt { fst $1, ($2 :: snd $1) }
+   	
 
 decl:
 	fdecl { $1 }
