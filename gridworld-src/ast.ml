@@ -1,14 +1,5 @@
 type op = 
-	  Add 
-	| Sub 
-	| Mult 
-	| Div 
-	| Equal 
-	| Neq 
-	| Less 
-	| Leq 
-	| Greater 
-	| Geq
+	  Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
 
 type expr =
 	  Int of int
@@ -22,12 +13,14 @@ type expr =
 
 type stmt = 
 	  Print of expr
+	  |If of expr * stmt * stmt
+	|While of expr * stmt
+	| Expr of expr
+	| Return of expr
 
 type fdecl = {
     fname : string;
-    paras : string list;
+    params : string list;
     body : stmt list;
 	}
-
 type program = fdecl list * stmt list
-
