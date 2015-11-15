@@ -38,7 +38,7 @@ fdecl:
 	FUNCTION ID LPAREN paras_opt RPAREN LBRACE stmt_list RBRACE 
 	{{
 		fname = $2;
-		paras = $4;
+		params = $4;
 		body = List.rev $7
 		}}
 
