@@ -17,19 +17,8 @@ type stmt =
 	|While of expr * stmt
 	| Expr of expr
 	| Return of expr
-/*	
-type mytypes = Int | String
 
-type vdecl = {
-    vname : string;
-    vtype : mytypes; 
-}
 
-type fullvdecl = {
-    fvtype : mytypes;
-    fvname : string;
-    fvexpr : expr;
-}*/
 
 type fdecl = {
     fname : string;
