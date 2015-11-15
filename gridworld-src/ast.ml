@@ -17,6 +17,19 @@ type stmt =
 	|While of expr * stmt
 	| Expr of expr
 	| Return of expr
+	
+type mytypes = Int | Char | Void
+
+type vdecl = {
+    varname : string;
+    vartype : mytypes; 
+}
+
+type fullvdecl = {
+    fvtype : mytypes;
+    fvname : string;
+    fvexpr : expr;
+}
 
 type fdecl = {
     fname : string;
