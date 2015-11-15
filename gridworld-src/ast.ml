@@ -18,11 +18,11 @@ type stmt =
 	| Expr of expr
 	| Return of expr
 	
-type mytypes = Int | Char | Void
+type mytypes = Int | String
 
 type vdecl = {
-    varname : string;
-    vartype : mytypes; 
+    vname : string;
+    vtype : mytypes; 
 }
 
 type fullvdecl = {

@@ -10,7 +10,7 @@ rule token = parse
 (* Basic tokens *)
 | '(' { LPAREN } | ')' { RPAREN } (* Parentheses *)
 | '{' { LBRACE } | '}' { RBRACE } (* Braces *)
-| '[' { LSQUAR } | ']' { RSQUAR } (* Square brackets *)
+| '[' { LBRACKET } | ']' { RBRACKET } (* Square brackets *)
 | ';' { SEMI }   | ':' { COLON } 
 | ',' { COMMA }	 | '=' { ASSIGN } 
 

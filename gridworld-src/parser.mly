@@ -1,5 +1,5 @@
 %{ open Ast %}
-%token LPAREN RPAREN LBRACE RBRACE LSQUAR RSQUAR SEMI COLON GET COMMA ASSIGN AT
+%token LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET SEMI COLON GET COMMA ASSIGN AT
 %token PLUS MINUS TIMES DIVIDE PERCENT EXP
 %token EQ NEQ LT LEQ GT GEQ NOT	AND OR
 %token BREAK CONTINUE ELIF ELSE FOR FUNCTION RETURN WHILE IF
@@ -30,6 +30,7 @@ program:
 
 decl:
 	fdecl { $1 }
+	|vdecl {$1}
 
 fdecl:
 	FUNCTION ID LPAREN params_opt RPAREN LBRACE stmt_list RBRACE 
@@ -38,7 +39,23 @@ fdecl:
 		params = $4;
 		body = List.rev $7
 		}}
+		
+		
+mytypes:
+	int {Int}
+vdecl:
+ mytypes ID SEMI
+  {{ 
+	vtype = $1;
+	vname = $2 }}
 
+fullvdecl:
+ mytypes ID ASSIGN expr SEMI 
+ {{ 
+	fvtype = $1;
+	fvname = $2;
+	fvexpr = $4 }}
+		  
 params_opt:
       /* nothing */ { [] }
   	| params_list   { List.rev $1 }
