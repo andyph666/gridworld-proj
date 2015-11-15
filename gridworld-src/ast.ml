@@ -1,5 +1,5 @@
 type op = 
-	  Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
+	  Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | Mod
 
 type expr =
 	  Int of int
@@ -17,7 +17,7 @@ type stmt =
 	|While of expr * stmt
 	| Expr of expr
 	| Return of expr
-	
+/*	
 type mytypes = Int | String
 
 type vdecl = {
@@ -29,7 +29,7 @@ type fullvdecl = {
     fvtype : mytypes;
     fvname : string;
     fvexpr : expr;
-}
+}*/
 
 type fdecl = {
     fname : string;

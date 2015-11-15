@@ -1,6 +1,6 @@
 %{ open Ast %}
 %token LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET SEMI COLON GET COMMA ASSIGN AT
-%token PLUS MINUS TIMES DIVIDE PERCENT EXP
+%token PLUS MINUS TIMES DIVIDE PERCENT EXP MOD
 %token EQ NEQ LT LEQ GT GEQ NOT	AND OR
 %token BREAK CONTINUE ELIF ELSE FOR FUNCTION RETURN WHILE IF
 %token <string> TYPE
@@ -18,6 +18,7 @@
 %left LT GT LEQ GEQ
 %left PLUS MINUS
 %left TIMES DIVIDE
+%left MOD
 
 %start program
 %type <Ast.program> program
@@ -40,7 +41,7 @@ fdecl:
 		body = List.rev $7
 		}}
 		
-		
+/*
 mytypes:
 	int {Int}
 vdecl:
@@ -54,7 +55,7 @@ fullvdecl:
  {{ 
 	fvtype = $1;
 	fvname = $2;
-	fvexpr = $4 }}
+	fvexpr = $4 }}*/
 		  
 params_opt:
       /* nothing */ { [] }
@@ -83,6 +84,7 @@ expr:
   	| expr MINUS  expr { Binop($1, Sub,   $3) }
   	| expr TIMES  expr { Binop($1, Mult,  $3) }
   	| expr DIVIDE expr { Binop($1, Div,   $3) }
+	| expr MOD    expr { Binop($1, Mod,   $3) }
   	| expr EQ     expr { Binop($1, Equal, $3) }
   	| expr NEQ    expr { Binop($1, Neq,   $3) }
   	| expr LT     expr { Binop($1, Less,  $3) }

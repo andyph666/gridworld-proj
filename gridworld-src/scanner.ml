@@ -1535,12 +1535,12 @@ and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
 
   | 6 ->
 # 13 "scanner.mll"
-      ( LSQUAR )
+      ( LBRACKET)
 # 1540 "scanner.ml"
 
   | 7 ->
 # 13 "scanner.mll"
-                       ( RSQUAR )
+                       ( RBRACKET )
 # 1545 "scanner.ml"
 
   | 8 ->
