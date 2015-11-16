@@ -1,2 +1,2 @@
 sh compile.sh
-chmod +x geo
+chmod +x gw

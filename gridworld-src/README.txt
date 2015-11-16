@@ -1,3 +1,3 @@
 To run:
 sh install.sh
-./geo test.g
+./gw test.g

@@ -1,18 +1,18 @@
-ocamllex scanner.mll # create scanner.ml
-echo "ocamllex scanner.mll finished"
-ocamlyacc parser.mly # create parser.ml and parser.mli
-echo "ocamlyacc parser.mly finished"
-ocamlc -c ast.ml # compile AST types
-echo "ocamlc -c ast.ml finished"
-ocamlc -c parser.mli # compile parser types
-echo "ocamlc -c parser.mli finished"
-ocamlc -c scanner.ml # compile the scanner
-echo "ocamlc -c scanner.ml finished"
-ocamlc -c parser.ml # compile the parser
-echo "ocamlc -c parser.ml finished"
-ocamlc -c compile.ml # compile the compiler
-echo "ocamlc -c compile.ml finished"
-ocamlc -c geo.ml # compile geo
-echo "ocamlc -c geo.ml finished"
-ocamlc -o geo_oc parser.cmo scanner.cmo compile.cmo geo.cmo
-echo "ocamlc -o geo_oc parser.cmo scanner.cmo geo.cmo finished"
+ocamllex scanner.mll
+echo "ocamllex scanner.mll"
+ocamlyacc parser.mly
+echo "ocamlyacc parser.mly"
+ocamlc -c ast.ml
+echo "ocamlc -c ast.ml"
+ocamlc -c parser.mli
+echo "ocamlc -c parser.mli"
+ocamlc -c scanner.ml
+echo "ocamlc -c scanner.ml"
+ocamlc -c parser.ml
+echo "ocamlc -c parser.ml"
+ocamlc -c compile.ml
+echo "ocamlc -c compile.ml"
+ocamlc -c grid.ml
+echo "ocamlc -c grid.ml"
+ocamlc -o gw parser.cmo scanner.cmo compile.cmo grid.cmo
+echo "ocamlc -o gw parser.cmo scanner.cmo grid.cmo"
