@@ -2,9 +2,9 @@ type op =
 	  Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | Mod
 
 type expr =
-	  Int of int
-	| Bool of  bool
-	| String of string
+	  Int_Lit of int
+	| Bool_Lit of  bool
+	| String_Lit of string
 	| Id of string
 	| Binop of expr * op * expr
 	| Assign of string * expr
@@ -18,7 +18,18 @@ type stmt =
 	| Expr of expr
 	| Return of expr
 
+type mytypes = Int 
 
+type vdecl = {
+    varname : string;
+    vartype : mytypes; 
+}
+
+type fullvdecl = {
+    fvtype : mytypes;
+    fvname : string;
+    fvexpr : expr;
+}
 
 type fdecl = {
     fname : string;

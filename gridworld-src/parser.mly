@@ -3,7 +3,7 @@
 %token PLUS MINUS TIMES DIVIDE PERCENT EXP MOD
 %token EQ NEQ LT LEQ GT GEQ NOT	AND OR
 %token BREAK CONTINUE ELIF ELSE FOR FUNCTION RETURN WHILE IF
-%token <string> TYPE
+%token INT VOID BOOL CHAR STRING
 %token PRINT
 %token EOF
 
@@ -39,15 +39,27 @@ fdecl:
 		params = $4;
 		body = List.rev $7
 		}}
-		
+
+mytypes:
+  INT {Int}
+
+vdecl:
+ mytypes ID SEMI
+  {{ vartype = $1;
+   varname = $2 }}
+
+fullvdecl:
+ mytypes ID ASSIGN expr SEMI {{ fvtype = $1;
+          fvname = $2;
+          fvexpr = $4 }}		
 		  
 params_opt:
       /* nothing */ { [] }
   	| params_list   { List.rev $1 }
 
 params_list:
-   	  ID COLON TYPE              	 { [$1] }
-  	| params_list COMMA ID COLON TYPE { $3 :: $1 }
+   	  mytypes ID               	 { [$2] }
+  	| params_list COMMA mytypes ID { $4 :: $1 }
 
 stmt_list:
       /* nothing */  { [] }
@@ -60,9 +72,9 @@ stmt:
 	| RETURN expr SEMI { Return($2) }
 
 expr:
-      INT_LIT       { Int($1) }
-  	| BOOL_LIT          { Bool($1) }
-  	| STR_LIT        { String($1) }
+      INT_LIT       { Int_Lit($1) }
+  	| BOOL_LIT          { Bool_Lit($1) }
+  	| STR_LIT        { String_Lit($1) }
   	| ID               { Id($1) }
   	| expr PLUS   expr { Binop($1, Add,   $3) }
   	| expr MINUS  expr { Binop($1, Sub,   $3) }

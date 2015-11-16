@@ -36,7 +36,11 @@ type token =
   | RETURN
   | WHILE
   | IF
-  | TYPE of (string)
+  | INT
+  | VOID
+  | BOOL
+  | CHAR
+  | STRING
   | PRINT
   | EOF
   | INT_LIT of (int)

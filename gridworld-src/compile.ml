@@ -22,9 +22,9 @@ let string_map_pairs map pairs =
 
 let translate (declarations, statements) =
 	let rec string_of_expr = function
-	    Int(l) -> string_of_int l
-	  | String(s) -> "\"" ^ s ^ "\""
-	  | Bool(l) -> string_of_bool l
+	    Int_Lit(l) -> string_of_int l
+	  | String_Lit(s) -> "\"" ^ s ^ "\""
+	  | Bool_Lit(l) -> string_of_bool l
 	  | Id(s) -> s
 	  | Binop(e1, op, e2) ->
 	      string_of_expr e1 ^ " " ^
