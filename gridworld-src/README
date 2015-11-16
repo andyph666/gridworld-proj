@@ -1,0 +1,6 @@
+How to run:
+type make
+then ./playgw test.gw
+
+Makefile generated with:
+ocamldep options *.mli *.ml > .depend
