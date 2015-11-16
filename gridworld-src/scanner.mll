@@ -34,8 +34,12 @@ rule token = parse
 | "while" { WHILE }
 
 (* Type *)
-| ("int"|"void"|"bool"|"char"|"string") as tp {TYPE(tp)} 
-(* Build-in Func *)
+| "int" { INT }
+| "void" { VOID }
+| "bool" { BOOL }
+| "char" { CHAR }
+| "string" { STRING }
+(* Built-in Func *)
 | "print" {PRINT}
 | eof { EOF } (* End of file *)
 
