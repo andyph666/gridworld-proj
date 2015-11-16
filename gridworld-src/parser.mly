@@ -30,7 +30,7 @@ program:
  	| program stmt { fst $1, ($2 :: snd $1) }
 
 decl:
-	fdecl { $1 }
+	vdecl { $1 }
 
 fdecl:
 	FUNCTION ID LPAREN params_opt RPAREN LBRACE stmt_list RBRACE 
@@ -44,14 +44,9 @@ mytypes:
   INT {Int}
 
 vdecl:
- mytypes ID SEMI
-  {{ vartype = $1;
-   varname = $2 }}
-
-fullvdecl:
- mytypes ID ASSIGN expr SEMI {{ fvtype = $1;
-          fvname = $2;
-          fvexpr = $4 }}		
+  mytypes ID ASSIGN expr SEMI {{ vtype = $1;
+          vname = $2;
+          vexpr = $4 }}		
 		  
 params_opt:
       /* nothing */ { [] }
@@ -66,9 +61,10 @@ stmt_list:
   	| stmt_list stmt { $2 :: $1 }
 
 stmt:
-	PRINT LPAREN expr RPAREN SEMI { Print($3) }
-	| IF LPAREN expr RPAREN stmt ELSE stmt { If($3, $5, $7)}
-	| WHILE LPAREN expr RPAREN stmt { While($3, $5) }
+  expr SEMI {Expr($1)}
+	| PRINT LPAREN expr RPAREN SEMI { Print($3) }
+	| IF LPAREN expr RPAREN LBRACE stmt_list RBRACE ELSE LBRACE stmt_list RBRACE { If($3, $6, $10)}
+	| WHILE LPAREN expr RPAREN LBRACE stmt_list RBRACE { While($3, $6) }
 	| RETURN expr SEMI { Return($2) }
 
 expr:

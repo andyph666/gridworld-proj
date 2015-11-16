@@ -12,23 +12,18 @@ type expr =
   	| Noexpr
 
 type stmt = 
-	  Print of expr
-	  |If of expr * stmt * stmt
-	|While of expr * stmt
+	Print of expr
+	| If of expr * stmt list * stmt list
+	| While of expr * stmt list
 	| Expr of expr
 	| Return of expr
 
 type mytypes = Int 
 
 type vdecl = {
-    varname : string;
-    vartype : mytypes; 
-}
-
-type fullvdecl = {
-    fvtype : mytypes;
-    fvname : string;
-    fvexpr : expr;
+    vtype : mytypes;
+    vname : string;
+    vexpr : expr;
 }
 
 type fdecl = {
@@ -36,4 +31,4 @@ type fdecl = {
     params : string list;
     body : stmt list;
 	}
-type program = fdecl list * stmt list
+type program = vdecl list * stmt list

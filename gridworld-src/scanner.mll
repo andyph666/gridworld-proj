@@ -35,7 +35,6 @@ rule token = parse
 
 (* Type *)
 | "int" { INT }
-| "void" { VOID }
 | "bool" { BOOL }
 | "char" { CHAR }
 | "string" { STRING }
