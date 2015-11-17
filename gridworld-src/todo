@@ -1,0 +1,4 @@
+check ast make sure names make sense
+2. define datatype representing python ast
+intermediate datastructure: make python printer
+make testall script
