@@ -39,7 +39,7 @@ grid.tar.gz : $(TARFILES)
 .PHONY : clean
 clean :
 	rm -f gw parser.ml parser.mli scanner.ml testall.log \
-	*.cmo *.cmi *.out *.diff
+	*.cmo *.cmi *.out *.diff test-*.py*
 
 
 parser.cmi : ast.cmo
