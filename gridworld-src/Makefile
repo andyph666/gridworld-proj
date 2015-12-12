@@ -2,7 +2,8 @@ OBJS = parser.cmo scanner.cmo compile.cmo grid.cmo
 
 TESTS = \
 hello \
-gcd
+gcd \
+all
 
 # Choose one
 YACC = ocamlyacc
@@ -10,14 +11,14 @@ YACC = ocamlyacc
 
 TARFILES = Makefile testall.sh scanner.mll parser.mly \
 	ast.ml bytecode.ml interpret.ml compile.ml execute.ml grid.ml \
-	$(TESTS:%=tests/test-%.mc) \
+	$(TESTS:%=tests/test-%.gw) \
 	$(TESTS:%=tests/test-%.out)
 
 gw : $(OBJS)
 	ocamlc -o gw $(OBJS)
 
 .PHONY : test
-test : ./playgw testall.sh
+test :  #./playgw testall.sh
 	./testall.sh
 
 scanner.ml : scanner.mll
