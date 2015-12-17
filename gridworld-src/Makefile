@@ -42,13 +42,17 @@ clean :
 
 
 parser.cmi : ast.cmo
+analyzer.cmo : sast.cmo ast.cmo
+analyzer.cmx : sast.cmx ast.cmx
 ast.cmo :
 ast.cmx :
 compile.cmo : ast.cmo
 compile.cmx : ast.cmx
-grid.cmo : scanner.cmo parser.cmi compile.cmo
-grid.cmx : scanner.cmx parser.cmx compile.cmx
+grid.cmo : scanner.cmo parser.cmi compile.cmo analyzer.cmo
+grid.cmx : scanner.cmx parser.cmx compile.cmx analyzer.cmx
 parser.cmo : ast.cmo parser.cmi
 parser.cmx : ast.cmx parser.cmi
+sast.cmo : ast.cmo
+sast.cmx : ast.cmx
 scanner.cmo : parser.cmi
 scanner.cmx : parser.cmx
