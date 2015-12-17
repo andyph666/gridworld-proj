@@ -1,7 +1,7 @@
 OBJS = parser.cmo scanner.cmo compile.cmo grid.cmo
 
 TESTS = \
-hello \
+helloworld \
 gcd
 
 # Choose one

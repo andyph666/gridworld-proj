@@ -1,0 +1,14 @@
+object player
+
+node init{
+	trainer = new player()
+
+	trainer.name = "mike";
+	trainer.age = 19;
+	goto(show)
+}
+
+node show{
+	print(trainer.name);
+	print(trainer.age);
+}

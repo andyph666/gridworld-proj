@@ -1,0 +1,8 @@
+bool printall(int a, int b, int c){
+	print(a);
+	print(b);
+	print(c);
+	return(True)
+}
+
+a = printall(3,5,9);

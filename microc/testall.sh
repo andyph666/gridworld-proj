@@ -1,6 +1,6 @@
 #!/bin/sh
 
-GW="./playgw"
+MICROC="./microc"
 
 # Set time limit for all operations
 ulimit -t 30
@@ -13,7 +13,7 @@ globalerror=0
 keep=0
 
 Usage() {
-    echo "Usage: testall.sh [options] [.gw files]"
+    echo "Usage: testall.sh [options] [.mc files]"
     echo "-k    Keep intermediate files"
     echo "-h    Print this help"
     exit 1
@@ -41,7 +41,7 @@ Compare() {
 # Run <args>
 # Report the command, run it, and report any errors
 Run() {
-    echo $* 
+    echo $* 1>&2
     eval $* || {
 	SignalError "$1 failed on $*"
 	return 1
@@ -51,26 +51,24 @@ Run() {
 Check() {
     error=0
     basename=`echo $1 | sed 's/.*\\///
-                             s/.gw//'`
-    reffile=`echo $1 | sed 's/.gw//'`
+                             s/.mc//'`
+    reffile=`echo $1 | sed 's/.mc$//'`
     basedir="`echo $1 | sed 's/\/[^\/]*$//'`/."
 
     echo -n "$basename..."
-    #输出了要的test名字
-    echo $basename 1>&2
 
+    echo 1>&2
     echo "###### Testing $basename" 1>&2
 
     generatedfiles=""
 
     generatedfiles="$generatedfiles ${basename}.i.out" &&
-    Run "$GW"  $1  '>' ${basename}.i.out &&
+    Run "$MICROC" "-i" "<" $1 ">" ${basename}.i.out &&
     Compare ${basename}.i.out ${reffile}.out ${basename}.i.diff
 
-
-    #generatedfiles="$generatedfiles ${basename}.py.out" &&
-    #Run "$GW" "-c" "<" $1 ">" ${basename}.py.out &&
-    #Compare ${basename}.py.out ${reffile}.out ${basename}.py.diff
+    generatedfiles="$generatedfiles ${basename}.c.out" &&
+    Run "$MICROC" "-c" "<" $1 ">" ${basename}.c.out &&
+    Compare ${basename}.c.out ${reffile}.out ${basename}.c.diff
 
     # Report the status and clean up the generated files
 
@@ -103,7 +101,7 @@ if [ $# -ge 1 ]
 then
     files=$@
 else
-    files="tests/fail-*.gw tests/test-*.gw"
+    files="tests/fail-*.mc tests/test-*.mc"
 fi
 
 for file in $files
@@ -113,7 +111,7 @@ do
 	    Check $file 2>> $globallog
 	    ;;
 	*fail-*)
-	    #CheckFail $file 2>> $globallog
+	    CheckFail $file 2>> $globallog
 	    ;;
 	*)
 	    echo "unknown file type $file"

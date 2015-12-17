@@ -1,0 +1,8 @@
+object event
+christmas = new event()
+
+christmas.start = "Monday";
+christmas.end = "Wednesday";
+
+print(christmas.start);
+print(christmas.end);

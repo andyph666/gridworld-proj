@@ -1,0 +1,5 @@
+bool i = True;
+bool j = False;
+
+if (i) { print("i is true"); }
+print(j);

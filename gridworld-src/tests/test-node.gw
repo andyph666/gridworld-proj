@@ -1,0 +1,11 @@
+node start{
+	goto(print)
+}
+
+node print{
+	print("node")
+}
+
+main{
+	goto(start)
+}

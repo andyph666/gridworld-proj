@@ -1,0 +1,6 @@
+object student
+student = new mike()
+mike.age = 19;
+mike.score = 87;
+print(mike.age);
+print(mike.score);

@@ -1,0 +1,11 @@
+int i = 0;
+while(i<5){
+	i++;
+	print(i);
+}
+print("++++");
+i=10;
+while (i>5){
+	i--;
+	print(i);
+}

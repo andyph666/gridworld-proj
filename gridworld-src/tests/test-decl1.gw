@@ -1,0 +1,8 @@
+int a = 0;
+string b = "hello";
+
+a = 10;
+b = "hello123";
+
+print(a);
+print(b);

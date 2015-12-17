@@ -27,6 +27,7 @@ type mytypes =
 	| String 
 	| Void
 
+
 type vdecl = {
     vtype : mytypes;
     vname : string;
