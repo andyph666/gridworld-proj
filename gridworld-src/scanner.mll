@@ -31,7 +31,7 @@ rule token = parse
 | "for" { FOR }			| "elif" { ELIF }
 | "function" {FUNCTION}	| "return" { RETURN }
 | "break" { BREAK }		| "continue" { CONTINUE }
-| "while" { WHILE }
+| "while" { WHILE }		| "node" {NODE}
 
 (* Type *)
 | "int" { INT }

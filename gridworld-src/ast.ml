@@ -1,11 +1,14 @@
 type op = 
-	  Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | Mod
+	  Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | Mod | And | Or | Not
+
+type scope = Local | Global
 
 type expr =
 	  Int_Lit of int
 	| Bool_Lit of  bool
 	| String_Lit of string
 	| Id of string
+	| Uniop of op * expr
 	| Binop of expr * op * expr
 	| Assign of string * expr
   	| Call of string * expr list
@@ -18,7 +21,11 @@ type stmt =
 	| Expr of expr
 	| Return of expr
 
-type mytypes = Int 
+type mytypes = 
+	Int 
+	| Bool 
+	| String 
+	| Void
 
 type vdecl = {
     vtype : mytypes;
@@ -26,9 +33,18 @@ type vdecl = {
     vexpr : expr;
 }
 
+type param_decl = 
+	Param of mytypes * string
+
 type fdecl = {
+	ftype: mytypes;
     fname : string;
-    params : string list;
+    params : param_decl list;
     body : stmt list;
 	}
-type program = vdecl list * stmt list
+
+type ndecl = {
+	nname: string;
+	body: stmt list;
+}
+type program = vdecl list * fdecl list * ndecl list

@@ -1,77 +1,20 @@
 open Ast
-(*
-let string_of_vdecl vdecl = vdecl.varname ^ match vdecl.vtype with 
-| Int -> "=0"
-| String -> "=\"\""
-| Char -> "=\"\""
-| Bool -> "=True"
 
-let rec string_of_expr = function
-	    Int_Lit(l) -> string_of_int l
-	  | String_Lit(s) -> "\"" ^ s ^ "\""
-	  | Bool_Lit(l) -> string_of_bool l
-	  | Id(s) -> s
-	  | Binop(e1, op, e2) ->
-	      string_of_expr e1 ^ " " ^
-	      (match op with
-			Add -> "+" | Sub -> "-" | Mult -> "*" | Div -> "/"| Mod -> "%"
-	      | Equal -> "==" | Neq -> "!="
-	      | Less -> "<" | Leq -> "<=" | Greater -> ">" | Geq -> ">=") ^ " " ^
-	      string_of_expr e2
-	  | Assign(v, e) -> v ^ " = " ^ string_of_expr e
-	  | Call(f, el) ->
-	      f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
-	  | Noexpr -> ""
-
-let string_of_fullvdecl fvdecl = fvdecl.fvname ^ "=" ^ string_of_expr fvdecl.fvexpr
-
-let rec string_of_decl = function
-	string_of_vdecl vdecl
-	| asdf -> string_of_fullvdecl
-in
-let translate_decls = function
-	[] -> ""
-	| hd::tl -> (string_of_decl hd) ^ "\n" ^ (translate_decls tl)
-*)
-(*
 let translate (declarations, statements) =
 	let rec string_of_expr = function
 	    Int_Lit(l) -> string_of_int l
 	  | String_Lit(s) -> "\"" ^ s ^ "\""
 	  | Bool_Lit(l) -> string_of_bool l
 	  | Id(s) -> s
-	  | Binop(e1, op, e2) ->
-	      string_of_expr e1 ^ " " ^
-	      (match op with
-			Add -> "+" | Sub -> "-" | Mult -> "*" | Div -> "/"| Mod -> "%"
-	      | Equal -> "==" | Neq -> "!="
-	      | Less -> "<" | Leq -> "<=" | Greater -> ">" | Geq -> ">=") ^ " " ^
-	      string_of_expr e2
-	  | Assign(v, e) -> v ^ " = " ^ string_of_expr e
-	  | Call(f, el) ->
-	      f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
-	  | Noexpr -> ""
-	in
-	let rec string_of_stmt = function
-		Print(expr) -> "print " ^ (string_of_expr expr)
-	in
-	let rec translate_stmts  = function
-		  [] -> ""
-		| hd::tl -> (string_of_stmt hd) ^ "\n" ^ (translate_stmts tl)
-	in List.map string_of_fdecl (List.rev funcs) ^ "\n" ^ translate_stmts (List.rev statements) 
-*)
-let translate (declarations, statements) =
-	let rec string_of_expr = function
-	    Int_Lit(l) -> string_of_int l
-	  | String_Lit(s) -> "\"" ^ s ^ "\""
-	  | Bool_Lit(l) -> string_of_bool l
-	  | Id(s) -> s
+	  | Uniop(o,e) ->
+	  	  "!(" ^ string_of_expr e ^ ")"
 	  | Binop(e1, o, e2) ->
 	      string_of_expr e1 ^ " " ^
 	      (match o with
 		Add -> "+" | Sub -> "-" | Mult -> "*" | Div -> "/"
 	      | Equal -> "==" | Neq -> "!="
-	      | Less -> "<" | Leq -> "<=" | Greater -> ">" | Geq -> ">=" | Mod -> "%") ^ " " ^
+	      | Less -> "<" | Leq -> "<=" | Greater -> ">" | Geq -> ">=" | Mod -> "%"
+	  	  | And -> " and " | Or -> " or ") ^ " " ^
 	      string_of_expr e2
 	  | Assign(v, e) -> v ^ " = " ^ string_of_expr e
 	  | Call(f, el) ->
