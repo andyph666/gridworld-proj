@@ -1,9 +1,8 @@
 OBJS = parser.cmo scanner.cmo compile.cmo grid.cmo
 
 TESTS = \
-hello \
-gcd \
-all
+helloworld \
+gcd
 
 # Choose one
 YACC = ocamlyacc
@@ -11,14 +10,14 @@ YACC = ocamlyacc
 
 TARFILES = Makefile testall.sh scanner.mll parser.mly \
 	ast.ml bytecode.ml interpret.ml compile.ml execute.ml grid.ml \
-	$(TESTS:%=tests/test-%.gw) \
+	$(TESTS:%=tests/test-%.mc) \
 	$(TESTS:%=tests/test-%.out)
 
 gw : $(OBJS)
 	ocamlc -o gw $(OBJS)
 
 .PHONY : test
-test :  #./playgw testall.sh
+test : ./playgw testall.sh
 	./testall.sh
 
 scanner.ml : scanner.mll
@@ -39,7 +38,7 @@ grid.tar.gz : $(TARFILES)
 .PHONY : clean
 clean :
 	rm -f gw parser.ml parser.mli scanner.ml testall.log \
-	*.cmo *.cmi *.out *.diff test-*.py*
+	*.cmo *.cmi *.out *.diff
 
 
 parser.cmi : ast.cmo

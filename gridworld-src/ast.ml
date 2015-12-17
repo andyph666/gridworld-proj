@@ -18,7 +18,11 @@ type stmt =
 	| Expr of expr
 	| Return of expr
 
-type mytypes = Int 
+type mytypes = 
+	| Int
+	| Bool 
+	| String
+	
 
 type vdecl = {
     vtype : mytypes;

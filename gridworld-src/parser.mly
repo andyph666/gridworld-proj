@@ -41,7 +41,9 @@ fdecl:
 		}}
 
 mytypes:
-  INT {Int}
+    INT {Int}
+  | BOOL {Bool}
+  | STRING {String}
 
 vdecl:
   mytypes ID ASSIGN expr SEMI {{ vtype = $1;
@@ -64,6 +66,7 @@ stmt:
   expr SEMI {Expr($1)}
 	| PRINT LPAREN expr RPAREN SEMI { Print($3) }
 	| IF LPAREN expr RPAREN LBRACE stmt_list RBRACE ELSE LBRACE stmt_list RBRACE { If($3, $6, $10)}
+  | IF LPAREN expr RPAREN LBRACE stmt_list RBRACE { If($3, $6, [])}
 	| WHILE LPAREN expr RPAREN LBRACE stmt_list RBRACE { While($3, $6) }
 	| RETURN expr SEMI { Return($2) }
 
@@ -76,7 +79,7 @@ expr:
   	| expr MINUS  expr { Binop($1, Sub,   $3) }
   	| expr TIMES  expr { Binop($1, Mult,  $3) }
   	| expr DIVIDE expr { Binop($1, Div,   $3) }
-	| expr MOD    expr { Binop($1, Mod,   $3) }
+  	| expr MOD    expr { Binop($1, Mod,   $3) }
   	| expr EQ     expr { Binop($1, Equal, $3) }
   	| expr NEQ    expr { Binop($1, Neq,   $3) }
   	| expr LT     expr { Binop($1, Less,  $3) }

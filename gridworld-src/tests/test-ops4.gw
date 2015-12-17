@@ -1,0 +1,8 @@
+/* not sure use && || or "and,or", both occurs in the LRM
+
+if(0&&1) {print("yes1");}
+if(0||1) {print("yes2");}
+if(0and1) {print("yes3");}
+if(0or1) {print("yes4");}
+if(True&&False) {print("yes5");}
+if(True||False) {print("yes6");}

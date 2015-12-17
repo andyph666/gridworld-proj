@@ -1,6 +1,6 @@
 #!/bin/sh
 
-GW="./gw"
+GW="./playgw"
 
 # Set time limit for all operations
 ulimit -t 30
@@ -40,32 +40,39 @@ Compare() {
 
 # Run <args>
 # Report the command, run it, and report any errors
-
 Run() {
-    echo $* 1>&2
+    echo $* 
     eval $* || {
 	SignalError "$1 failed on $*"
 	return 1
-}
+    }
 }
 
 Check() {
     error=0
     basename=`echo $1 | sed 's/.*\\///
                              s/.gw//'`
-    reffile=`echo $1 | sed 's/.gw$//'`
+    reffile=`echo $1 | sed 's/.gw//'`
     basedir="`echo $1 | sed 's/\/[^\/]*$//'`/."
 
     echo -n "$basename..."
+    #输出了要的test名字
+    echo $basename 1>&2
 
-    echo 1>&2
     echo "###### Testing $basename" 1>&2
 
     generatedfiles=""
 
-    generatedfiles="$generatedfiles ${basename}.py" &&
-    Run "$GW" "<" $1 ">" ${basename}.py && eval "python" ${basename}.py ">" ${basename}.py.out &&
-    Compare ${basename}.py.out ${reffile}.out ${basename}.py.diff
+    generatedfiles="$generatedfiles ${basename}.i.out" &&
+    Run "$GW"  $1  '>' ${basename}.i.out &&
+    Compare ${basename}.i.out ${reffile}.out ${basename}.i.diff
+
+
+    #generatedfiles="$generatedfiles ${basename}.py.out" &&
+    #Run "$GW" "-c" "<" $1 ">" ${basename}.py.out &&
+    #Compare ${basename}.py.out ${reffile}.out ${basename}.py.diff
+
+    # Report the status and clean up the generated files
 
     if [ $error -eq 0 ] ; then
 	if [ $keep -eq 0 ] ; then
@@ -106,7 +113,7 @@ do
 	    Check $file 2>> $globallog
 	    ;;
 	*fail-*)
-	    CheckFail $file 2>> $globallog
+	    #CheckFail $file 2>> $globallog
 	    ;;
 	*)
 	    echo "unknown file type $file"

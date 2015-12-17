@@ -1,0 +1,6 @@
+int i=0;
+if(True){
+	i = i + 1;
+	print(i);
+}
+if(True) {print(i+1);}
