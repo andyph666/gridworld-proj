@@ -12,13 +12,18 @@
 %token <string> STR_LIT
 %token <string> ID
 
+%nonassoc NOELSE
+%nonassoc ELSE
+%nonassoc RETURN
 
 %right ASSIGN
-%left EQ NEQ
-%left LT GT LEQ GEQ
+%left AND OR
+%right NOT
+%left EQ NEQ LT GT LEQ GEQ
 %left PLUS MINUS
 %left TIMES DIVIDE
 %left MOD
+%nonassoc LPAREN RPAREN
 
 %start program
 %type <Ast.program> program
@@ -81,8 +86,8 @@ stmt:
   | LIST LPAREN actuals_opt RPAREN { List($3) }
   | CHOOSE LPAREN actuals_opt RPAREN { Choose($3) }
   | GOTO LPAREN expr RPAREN SEMI { Goto($3) }
-	| IF LPAREN expr RPAREN LBRACE stmt_list RBRACE ELSE LBRACE stmt_list RBRACE { If($3, $6, $10)}
   | IF LPAREN expr RPAREN LBRACE stmt_list RBRACE { If($3, $6, [])}
+	| IF LPAREN expr RPAREN LBRACE stmt_list RBRACE ELSE LBRACE stmt_list RBRACE { If($3, $6, $10)}
 	| WHILE LPAREN expr RPAREN LBRACE stmt_list RBRACE { While($3, $6) }
 	| RETURN expr SEMI { Return($2) }
 

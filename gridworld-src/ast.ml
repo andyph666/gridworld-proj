@@ -51,4 +51,4 @@ type ndecl = {
 	nname: string;
 	body: stmt list;
 }
-type program = vdecl list * fdecl list * ndecl list
+type program = vdecl list * fdecl list * ndecl  list
