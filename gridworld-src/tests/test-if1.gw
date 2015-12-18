@@ -1,6 +1,8 @@
-int i=0;
-if(i==0){
-	i = i + 1;
-	print(i);
+main{
+	int i=0;
+	if(i==0){
+		i = i + 1;
+		print(i);
+	}
+	if(i==0) {print(i+1);}
 }
-if(i==0) {print(i+1);}

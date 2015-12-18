@@ -1,8 +1,10 @@
-string i = "boss";
-string j = "enemy";
+main{
+	string i = "boss";
+	string j = "enemy";
 
-i = "boss1";
-j = "enemy1";
+	i = "boss1";
+	j = "enemy1";
 
-print(i);
-print(j);
+	print(i);
+	print(j);
+}
