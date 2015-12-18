@@ -16,6 +16,9 @@ type expr =
 
 type stmt = 
 	Print of expr
+	| List of expr list
+	| Choose of expr list
+	| Goto of expr
 	| If of expr * stmt list * stmt list
 	| While of expr * stmt list
 	| Expr of expr

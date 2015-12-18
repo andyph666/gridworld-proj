@@ -141,7 +141,51 @@ let rec check_stmt (scope : symbol_table) (stmt : Ast.stmt) = match stmt with
 				if (t = SString || t = SInt) then
 					SPrint(expr)
 				else raise (Failure "Print takes only type string or int")
+	| List(e) -> 
+		let exprs = List.fold_left (fun a b ->
+			let expr = check_expr scope b in
+			let t = type_expr expr in 
+				if t <> SString then
+					raise (Failure "List takes only type string")
+				else expr :: a) [] e in
+				SList(exprs)
+	| Choose(e) ->
+		let exprs = List.fold_left (fun a b ->
+			let expr = check_expr scope b in
+				let t = type_expr expr in
+					if t <> SString then
+						raise (Failure ("Choose takes only type string"))
+					else 
+						(try 
+							let id = match b with
+							 String_Lit(a) -> a
+							| Id(str) -> str
+							| _ -> raise (Failure "Wrong expression type in Choose") in 
+							let _ = find_node scope.nodes id in
+							expr :: a
+						with
+							Not_found ->
+							raise (Failure ("Node not found")))) [] e in
+					SChoose(exprs)
+	| Goto(e) ->
+		let expr = check_expr scope e in
+			let t = type_expr expr in
+				if t <> SString then
+					raise (Failure ("Goto takes only type string"))
+				else 
+					(try 
+						let id = match e with
+						 String_Lit(a) -> a
+						| Id(str) -> str
+						| _ -> raise (Failure "Wrong expression type in Goto") in 
+						let _ = find_node scope.nodes id in
+						SGoto(expr)
+						
+					with
+						Not_found ->
+						raise (Failure ("Node not found")))
 
+			
 and  check_stmt_list (scope : symbol_table) (stml : Ast.stmt list) =
 	List.fold_left (fun a s -> let stmt = check_stmt scope s in stmt::a) [] stml
 
@@ -232,7 +276,8 @@ let process_func_decl (env : environment) (f : Ast.fdecl) =
 		let _ = find_func env.scope.functions f.fname in
 			raise (Failure ("Function already declared with name " ^ f.fname))
 	with Not_found ->
-		if f.fname = "Print" then raise (Failure "A function cannot be named 'Print'")
+		if (f.fname = "print" || f.fname = "goto" || f.fname = "list" || f.fname = "choose" || f.fname = "main") 
+		then raise (Failure "A function cannot have same name as built-in function")
 		else
 			check_func_decl env f
 
@@ -241,7 +286,8 @@ let process_node_decl (env : environment) (n : Ast.ndecl) =
 		let _ = find_func env.scope.functions n.nname in
 			raise (Failure ("Node with same name as function " ^ n.nname))
 	with Not_found ->
-		if n.nname = "Print" then raise (Failure "A node cannot be named 'Print'")
+		if (n.nname = "print" || n.nname= "goto" || n.nname = "list" || n.nname = "choose" || n.nname = "main") 
+		then raise (Failure "A node cannot have same name as built-in function")
 		else
 			try
 				let _ = find_node env.scope.nodes n.nname in

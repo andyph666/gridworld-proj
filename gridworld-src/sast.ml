@@ -18,6 +18,9 @@ type sexpr =
 
 type sstmt = 
 	SPrint of sexpr
+	| SList of sexpr list
+	| SChoose of sexpr list
+	| SGoto of sexpr
 	| SIf of sexpr * sstmt list * sstmt list
 	| SWhile of sexpr * sstmt list
 	| SExpr of sexpr

@@ -2,9 +2,9 @@
 %token LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET SEMI COLON GET COMMA ASSIGN AT
 %token PLUS MINUS TIMES DIVIDE PERCENT EXP MOD
 %token EQ NEQ LT LEQ GT GEQ NOT	AND OR
-%token BREAK CONTINUE ELIF ELSE FOR FUNCTION NODE RETURN WHILE IF
+%token BREAK CONTINUE ELIF ELSE FOR FUNCTION RETURN WHILE IF
 %token INT VOID BOOL CHAR STRING
-%token PRINT
+%token PRINT GOTO LIST CHOOSE MAIN NODE
 %token EOF
 
 %token <int> INT_LIT
@@ -45,6 +45,10 @@ ndecl:
     nname = $2;
     body = List.rev $4
     }}
+  | MAIN LBRACE stmt_list RBRACE{{
+    nname = "main";
+    body = List.rev $3
+    }}
 
 
 vdecl:
@@ -70,9 +74,13 @@ stmt_list:
       /* nothing */  { [] }
   	| stmt_list stmt { $2 :: $1 }
 
+
 stmt:
   expr SEMI {Expr($1)}
 	| PRINT LPAREN expr RPAREN SEMI { Print($3) }
+  | LIST LPAREN actuals_opt RPAREN { List($3) }
+  | CHOOSE LPAREN actuals_opt RPAREN { Choose($3) }
+  | GOTO LPAREN expr RPAREN SEMI { Goto($3) }
 	| IF LPAREN expr RPAREN LBRACE stmt_list RBRACE ELSE LBRACE stmt_list RBRACE { If($3, $6, $10)}
   | IF LPAREN expr RPAREN LBRACE stmt_list RBRACE { If($3, $6, [])}
 	| WHILE LPAREN expr RPAREN LBRACE stmt_list RBRACE { While($3, $6) }
