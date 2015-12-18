@@ -10,7 +10,7 @@ type sexpr =
 	| SBool_Lit of  bool * t
 	| SString_Lit of string * t
 	| SId of string * t
-	| SUniop of op * expr * t
+	| SUniop of op * sexpr * t
 	| SBinop of sexpr * Ast.op * sexpr * t
 	| SAssign of string * sexpr * t
   	| SCall of string * sexpr list * t

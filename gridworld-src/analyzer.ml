@@ -58,7 +58,7 @@ and check_uniop (scope : symbol_table) uniop = match uniop with
 			Not ->
 				let e = check_expr scope expr in
 				let t = type_expr e in
-				if (t <> SBool) then raise (Failure "Incorrect type for ! ") else SUniop(op, expr, SBool)
+				if (t <> SBool) then raise (Failure "Incorrect type for ! ") else SUniop(op, e, SBool)
 			| _ -> raise (Failure "Not a uniop")
 			)
 	| _ -> raise (Failure "Not a uniop")
