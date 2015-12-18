@@ -1,6 +1,8 @@
-int i = 5;
-while (i > 0) {
-print(i);
-i = i - 1;
+main{
+	int i = 5;
+	while (i > 0) {
+	print(i);
+	i = i - 1;
+	}
+	print("over");
 }
-print("over");

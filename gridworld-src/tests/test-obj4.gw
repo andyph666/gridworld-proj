@@ -12,3 +12,7 @@ node show{
 	print(trainer.name);
 	print(trainer.age);
 }
+
+main{
+	goto(init)
+}

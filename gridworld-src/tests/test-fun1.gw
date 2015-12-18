@@ -1,7 +1,9 @@
-int i;
-int sum(int a, int b){
-	return a+b
-}
+main{
+	int i;
+	int sum(int a, int b){
+		return a+b;
+	}
 
-i = sum(2, 7);
-print(i);
+	i = sum(2, 7);
+	print(i);
+}

@@ -1,11 +1,13 @@
-object player
-trainer = new player()
+main{
+	object player
+	trainer = new player()
 
-trainer.name = "mike";
-trainer.age = 19;
+	trainer.name = "mike";
+	trainer.age = 19;
 
-bool printInfo(){
-	print(trainer.name);
-	print(train.age);
+	void printInfo(){
+		print(trainer.name);
+		print(train.age);
+	}
+	printInfo();
 }
-bool a = printInfo();

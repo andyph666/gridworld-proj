@@ -1,5 +1,3 @@
-(* add line 67 in parser.mly to add if() without else *)
-(* add line 245,46 in parser.mly and line 23,24 to ast.ml add string and bool *)
 
 impossible to test : read() & roll() & list() & choose() without an input	
 
@@ -12,14 +10,17 @@ FAILED (sth wrong with mod, how about the precedence of mod??)
 test-arith3 : test calculation with parenthesis
 FAILED (no effect of () )
 
-test-array1 : 1D array assigment and access
-FAILED
+test-arith-neg : test negative value calculations
+FAILED (no negative numbers now)
 
-test-array2 : 2D array assigment and access (not sure if it is written right)
+test-array-1d : 1D array declaration(also declared by expr) and access
+FAILED (spilt into 3)
+
+test-array-2d : 2D array assigment and access (not sure if it is written right)
 FAILED
 
 test-comment : test the comment
-OK
+OK ( spilt into 2: block and line)
 
 test-decl1 : test variable declaration with initialization
 OK
@@ -43,6 +44,9 @@ test-fun1 : test the basic function with return
 FAILED
 
 test-fun2 : test the basic function without return
+FAILED
+
+test-fun3 : test function in function
 FAILED
 
 test-gcd1 : test gcd, but not using function
@@ -84,22 +88,25 @@ FAILED
 test-obj4 : test object in nodes
 FAILED
 
-test-ops1 : test binary operators
-OK
+test-ops1 : test binary operators 
+OK (spilt into 11 small tests)
 
 test-ops2 : test unary operator !
-FAILED(no this operators)
+FAILED(change to neg)
 
 test-ops3 : test unary operator ++ and --
-FAILED
+FAILED ( spilt into 2 tests)
 
 test-ops4 : test boolean operators 
+FAILED ( spilt into 6 tests)
+
+test-scope-func : test the scope of the variables in global
 FAILED
 
-test-scope1 : test the scope of the variables in global
+test-scope-global : test the scope of the variables in function
 FAILED
 
-test-scope2 : test the scope of the variables in function
+test-scope-node : test the scope of the variables in node
 FAILED
 
 test-var1 : test integer variable assignment

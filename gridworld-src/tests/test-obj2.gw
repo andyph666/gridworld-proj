@@ -1,8 +1,10 @@
-object event
-christmas = new event()
+main{
+	object event
+	christmas = new event()
 
-christmas.start = "Monday";
-christmas.end = "Wednesday";
+	christmas.start = "Monday";
+	christmas.end = "Wednesday";
 
-print(christmas.start);
-print(christmas.end);
+	print(christmas.start);
+	print(christmas.end);
+}

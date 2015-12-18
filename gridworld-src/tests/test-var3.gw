@@ -1,5 +1,7 @@
-bool i = True;
-bool j = False;
+main{
+	bool i = True;
+	bool j = False;
 
-if (i) { print("i is true"); }
-print(j);
+	if (i) { print("i is true"); }
+	print(j);
+}

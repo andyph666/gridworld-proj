@@ -1,0 +1,10 @@
+node test(){ 
+	a = a + 20;
+	print(a);
+	goto(test1)
+}
+
+main{
+	int a = 15;
+	goto(test)
+}

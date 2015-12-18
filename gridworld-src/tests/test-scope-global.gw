@@ -1,0 +1,17 @@
+main{
+	int a = 10;
+	int b = 15;
+	print(a);
+	print(b);
+
+	int foo(int sum){
+		a = a + 1;
+		b = b + 1;
+		sum = a + b;
+		print(a);
+		print(b);
+		print(sum);
+	}
+
+	foo(0);
+}
