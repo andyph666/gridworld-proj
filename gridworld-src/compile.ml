@@ -59,12 +59,12 @@ open Sast
 	  			print_expr e1;
 	  			print_string(":") :: 
 	  			(List.map addTab (List.concat (List.rev (List.map print_stmt s1))));
-	  		 	print_string("else:") :: (List.map addTab (List.concat (List.rev (List.map print_stmt s2))));
-	  |SList -> print_string("list")
-	  |SChoose -> print_string("choose")
+	  		 	print_string("else:") :: (List.map addTab (List.concat (List.rev (List.map print_stmt s2))));;
+	  (*|SList() -> print_string("list")
+	  |SChoose() -> print_string("choose")
 	  |SGoto(e) -> 
 	  	print_expr(e);
-	  	print_string("()")
+	  	print_string("()")*)
 
  	let rec print_type (t: Sast.t)= function
 	SVoid -> print_string "void ";
@@ -92,16 +92,18 @@ open Sast
 	let rec print_stmt_list (p : Sast.sstmt list) = 
 	match p with
 		[] -> print_string "";
-		| hd::[] -> print_string"";
-		| hd::tl -> print_stmt hd; print_string "\n"; print_stmt_list tl;;
+		| hd::[] ->	print_string ""
+		| hd::tl -> print_string "\t"; print_stmt hd; print_string "\n"; print_stmt_list tl;;
 
 	let rec print_sndecl  (f : Sast.sndecl) = match f with
 		|_ ->
 		print_string "def ";
 		print_string f.nname; 
 		print_string "(";
-		print_string "): \n";;
-		(*List.iter print_stmt (List.rev f.sbody);;*)
+		print_string "): \n";
+		print_stmt_list (List.rev f.sbody);
+		(*List.iter print_stmt (List.rev f.sbody);*)
+		print_string "end";;
 
 	let rec print_sfdecl  (f : Sast.sfdecl) = match f with
 		|_ ->
@@ -109,7 +111,8 @@ open Sast
 		print_string f.fname; 
 		print_string "(";
 		print_param_list (List.rev f.sparams); 
-		print_string "): \n";;
+		print_string "): \n";
+		print_stmt_list (List.rev f.sbody)
 		(*List.iter print_stmt (List.rev f.sbody);*)
 	let translate (variables, functions, nodes) =
 		List.iter print_svdecl (List.rev variables);

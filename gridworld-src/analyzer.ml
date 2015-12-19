@@ -286,7 +286,7 @@ let process_node_decl (env : environment) (n : Ast.ndecl) =
 		let _ = find_func env.scope.functions n.nname in
 			raise (Failure ("Node with same name as function " ^ n.nname))
 	with Not_found ->
-		if (n.nname = "print" || n.nname= "goto" || n.nname = "list" || n.nname = "choose" || n.nname = "main") 
+		if (n.nname = "print" || n.nname= "goto" || n.nname = "list" || n.nname = "choose") 
 		then raise (Failure "A node cannot have same name as built-in function")
 		else
 			try
@@ -306,8 +306,8 @@ let process_global_decl (env : environment) (g : Ast.vdecl) =
 let check_program (p : Ast.program) =
 	let s = { parent = None; variables = []; functions = []; nodes = []; return_found = false} in
 	let env = { scope = s } in
-	let (vars, funcs, nodes) = p in
-	let globals = List.fold_left (fun a g -> process_global_decl env g :: a) [] (List.rev vars) in
-	let funcs = List.fold_left (fun a f -> process_func_decl env f :: a) [] (List.rev funcs) in
-	let nodes = List.fold_left (fun a n -> process_node_decl env n :: a) [] nodes in
+	let (vs, fs, ns) = p in
+	let globals = List.fold_left (fun a g -> process_global_decl env g :: a) [] (List.rev vs) in
+	let funcs = List.fold_left (fun a f -> process_func_decl env f :: a) [] (List.rev fs) in
+	let nodes = List.fold_left (fun a n -> process_node_decl env n :: a) [] ns in
 	globals, funcs, nodes

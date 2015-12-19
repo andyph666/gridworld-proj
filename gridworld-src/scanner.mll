@@ -32,6 +32,7 @@ rule token = parse
 | "function" {FUNCTION}	| "return" { RETURN }
 | "break" { BREAK }		| "continue" { CONTINUE }
 | "while" { WHILE }		| "node" {NODE}
+| "main" {MAIN}
 
 (* Type *)
 | "int" { INT }

@@ -1,58 +1,18 @@
-OBJS = parser.cmo scanner.cmo compile.cmo grid.cmo
+compiler: grid.ml objects
+	ocamlc -c grid.ml
+	ocamlc -o gw ast.cmo parser.cmo scanner.cmo compile.cmo analyzer.cmo grid.cmo
 
-TESTS = \
-helloworld \
-gcd
-
-# Choose one
-YACC = ocamlyacc
-# YACC = menhir --explain
-
-TARFILES = Makefile testall.sh scanner.mll parser.mly \
-	ast.ml bytecode.ml interpret.ml compile.ml execute.ml grid.ml \
-	$(TESTS:%=tests/test-%.mc) \
-	$(TESTS:%=tests/test-%.out)
-
-gw : $(OBJS)
-	ocamlc -o gw $(OBJS)
-
-.PHONY : test
-test : ./playgw testall.sh
+objects: scanner parser generator
+	ocamlc -c ast.ml sast.ml parser.mli scanner.ml parser.ml analyzer.ml compile.ml
+generator: analyzer.ml compile.ml
+parser: parser.mly
+	ocamlyacc -v parser.mly
+scanner: scanner.mll
+	ocamllex scanner.mll
+.PHONY: test
+test: compiler
 	./testall.sh
 
-scanner.ml : scanner.mll
-	ocamllex scanner.mll
-
-parser.ml parser.mli : parser.mly
-	$(YACC) parser.mly
-
-%.cmo : %.ml
-	ocamlc -c $<
-
-%.cmi : %.mli
-	ocamlc -c $<
-
-grid.tar.gz : $(TARFILES)
-	cd .. && tar czf grid/grid.tar.gz $(TARFILES:%=grid/%)
-
-.PHONY : clean
-clean :
-	rm -f gw parser.ml parser.mli scanner.ml testall.log \
-	*.cmo *.cmi *.out *.diff
-
-
-parser.cmi : ast.cmo
-analyzer.cmo : sast.cmo ast.cmo
-analyzer.cmx : sast.cmx ast.cmx
-ast.cmo :
-ast.cmx :
-compile.cmo : ast.cmo
-compile.cmx : ast.cmx
-grid.cmo : scanner.cmo parser.cmi compile.cmo analyzer.cmo
-grid.cmx : scanner.cmx parser.cmx compile.cmx analyzer.cmx
-parser.cmo : ast.cmo parser.cmi
-parser.cmx : ast.cmx parser.cmi
-sast.cmo : ast.cmo
-sast.cmx : ast.cmx
-scanner.cmo : parser.cmi
-scanner.cmx : parser.cmx
+.PHONY: clean
+clean:
+	rm -f parser.mli scanner.ml parser.ml parser.output *.cmo *cmi grid *~

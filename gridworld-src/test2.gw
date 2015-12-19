@@ -1,2 +1,4 @@
+main{
 print("hello world");
-
+print("this doesn't work");
+}
