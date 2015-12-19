@@ -112,7 +112,21 @@ and check_call (scope : symbol_table) c = match c with
 						SCall(id, exprs, f.ftype)
 		with 
 			Not_found ->
-				raise (Failure ("Function not found with name " ^ id)))
+				let (fsparams,fftype) = match id with
+				| "print" -> [{ svtype = t; svname = v.vname; svexpr = expr}],
+				| "goto" ->
+				| "list" -> 
+				| "choose" -> 
+				| "main" -> 
+				| _ -> raise (Failure ("Function not found with name " ^ id)))
+				in let exprs = List.fold_left2 (fun a b c ->
+							let t = b.svtype in
+							let expr = check_expr scope c in
+							let t2 = type_expr expr in
+								if t <> t2
+								then raise (Failure "wrong type")
+								else expr :: a) [] fsparams el in
+								SCall(id, exprs, fftype))
 	| _ -> raise (Failure ("Not a call"))
 
 
