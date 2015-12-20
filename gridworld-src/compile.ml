@@ -50,7 +50,7 @@ open Sast
 	 | SPrint(e) ->
 		 print_string "\t";print_string ("print (") ;
 		 print_expr e ;
-		 print_string (")")
+		 print_string (")\n")
 	 | SWhile(e, s) ->
 		 print_string "\t";print_string("while (") ;
 		 print_expr (e) ;
@@ -66,10 +66,14 @@ open Sast
 	  	print_string "\")"
 	 |SChoose(e) -> 
 	 	print_string "\tchoice = int(input(\"Enter a choice: \"))\n";
-	 	(*List.iter2 (fun a b-> (print_string "\tif (choice==";print_int a;print_string "):\n\t\t"; print_expr b;print_string"()\n")) (range 1 (List.length(e))) e;
-	 	*)print_string "\telse:\n\t\tchoice = int(input(\"Enter a choice: \"))\n"
+	 	List.iter2 (fun a b-> (print_string "\tif (choice==";print_int a;print_string "):\n\t\t"; print_expr b;print_string"()\n")) (range 1 (List.length(e))) e;
+	 	print_string "\telse:\n\t\tchoice = int(input(\"Enter a choice: \"))\n"
 	 |SGoto(e) ->
 	  	print_string "\t";print_expr e; print_string"()\n";
+	 (*|SRead(e) ->
+	 	print_string"\t";
+	 	print_expr e;
+	 	print_string " = input();\n"*)
 	 | SIf(e1, s1, s2) ->
 	  		match s2 with
 	  		[] ->
@@ -125,7 +129,8 @@ open Sast
 		print_string f.nname; 
 		print_string "(";
 		print_string "): \n";
-		print_stmt_list (List.rev f.sbody);;
+		print_stmt_list (List.rev f.sbody);
+		print_string "\texit()\n";;
 		(*List.iter print_stmt (List.rev f.sbody);*)
 
 	let rec print_sfdecl  (f : Sast.sfdecl) = match f with
