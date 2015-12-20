@@ -1,4 +1,22 @@
+int e = 5;
+node test2{
+
+}
 main{
-print("hello world");
-print("this doesn't work");
+	print("hello world");
+	x=10;
+	e = 10;
+	if(e>2){
+		print("hi");
+	}
+	else{
+		print("NO");
+	}
+	list(e);
+	print("this doesn't work");
+}
+int function test() {
+	print("test again");
+	print("cool");
+	return 0;
 }

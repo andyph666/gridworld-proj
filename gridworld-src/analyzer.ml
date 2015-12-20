@@ -91,11 +91,14 @@ and check_binop (scope : symbol_table) binop = match binop with
 
 and check_assign (scope : symbol_table) a = match a with
 	Ast.Assign(id, expr) ->
-		let (decl, t) = check_id scope id in
-		let e = check_expr scope expr in
-		let t2 = type_expr e in
-		if t <> t2 then raise (Failure "Incorrect type assignment.") 
-		else SAssign(id, e, t)
+		try(
+			let (decl, t) = check_id scope id in
+			let e = check_expr scope expr in
+			let t2 = type_expr e in
+			if t <> t2 then raise (Failure "Incorrect type assignment.") 
+			else SAssign(id, e, t))
+		with Not_found -> let e = check_expr scope expr in 
+							let t = type_expr e in SAssign(id, e, t)
 	| _ -> raise (Failure "Not an assignment")
 
 and check_call (scope : symbol_table) c = match c with
@@ -112,21 +115,7 @@ and check_call (scope : symbol_table) c = match c with
 						SCall(id, exprs, f.ftype)
 		with 
 			Not_found ->
-				let (fsparams,fftype) = match id with
-				| "print" -> [{ svtype = t; svname = v.vname; svexpr = expr}],
-				| "goto" ->
-				| "list" -> 
-				| "choose" -> 
-				| "main" -> 
-				| _ -> raise (Failure ("Function not found with name " ^ id)))
-				in let exprs = List.fold_left2 (fun a b c ->
-							let t = b.svtype in
-							let expr = check_expr scope c in
-							let t2 = type_expr expr in
-								if t <> t2
-								then raise (Failure "wrong type")
-								else expr :: a) [] fsparams el in
-								SCall(id, exprs, fftype))
+				raise (Failure ("Function not found with name " ^ id)))
 	| _ -> raise (Failure ("Not a call"))
 
 
