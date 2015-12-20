@@ -56,7 +56,6 @@ Check() {
     basedir="`echo $1 | sed 's/\/[^\/]*$//'`/."
 
     echo -n "$basename..."
-    #输出了要的test名字
     echo $basename 1>&2
 
     echo "###### Testing $basename" 1>&2
