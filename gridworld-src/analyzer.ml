@@ -28,13 +28,12 @@ let type_expr (se : Sast.sexpr) : Sast.t =
 let rec check_id (scope : symbol_table) id =
 	try
 		let (_, decl, t) = List.find(fun (n, _, _) -> n = id ) scope.variables in t
-	with Not_found -> match scope.parent with
-		Some(parent) -> check_id parent id
-		| _ -> try
-					let n = List.find(fun c -> c.nname = id ) scope.nodes in SVoid
-				with Not_found -> match scope.parent with
-					Some(parent) -> check_id parent id
-					| _ -> raise Not_found
+	with Not_found -> 
+		try let _ = List.find(fun c -> c.nname = id) scope.nodes in SString
+		with Not_found ->
+			match scope.parent with
+				Some(parent) -> check_id parent id
+				| _ ->  raise Not_found
 
 let rec find_func (scope : symbol_table) f =
 	let l = scope.functions in
@@ -104,7 +103,7 @@ and check_binop (scope : symbol_table) binop = match binop with
 	| _ -> raise (Failure "Not an op")
 
 and check_assign (scope : symbol_table) a = match a with
-	Ast.Assign(id, expr) ->
+	Ast.Assign(id, expr) ->(
 		try(
 			let t = check_id scope id in
 			let e = check_expr scope expr in
@@ -114,7 +113,7 @@ and check_assign (scope : symbol_table) a = match a with
 		with Not_found -> let e = check_expr scope expr in 
 							let t = type_expr e in 
 							let v={ svtype = t; svname = id; svexpr = e}
-		in scope.variables <- (v.svname,v,t) :: scope.variables; SAssign(id, e, t)
+		in scope.variables <- (v.svname,v,t) :: scope.variables; SAssign(id, e, t))
 							
 	| _ -> raise (Failure "Not an assignment")
 
@@ -268,7 +267,7 @@ List.fold_left (fun a s -> let stmt = check_stmt scope s in
 		| _ -> stmt :: a) [] stml
 
 let check_func_decl (env : environment) (f : Ast.fdecl) =
-	let scope' = { env.scope with parent = Some(env.scope); variables = []; nodes = [] } in
+	let scope' = { env.scope with parent = Some(env.scope); variables = []; nodes = env.scope.nodes; functions = env.scope.functions } in
 	let t = check_var_type env.scope f.ftype in
 	let params = List.fold_left (fun a f -> match f with
 		Ast.Param(t, n) ->
@@ -286,7 +285,7 @@ let check_func_decl (env : environment) (f : Ast.fdecl) =
 
 
 let check_node_decl (env : environment) (n : Ast.ndecl) =
-	let scope' = { env.scope with parent = Some(env.scope); variables = []; functions = [] } in
+	let scope' = { env.scope with parent = Some(env.scope); variables = []; nodes = env.scope.nodes; functions = env.scope.functions } in
 	let statements = process_node_stmt scope' n.body in
 	let n = { nname = n.nname; sbody = statements } in
 	env.scope.nodes <- n :: env.scope.nodes; n
