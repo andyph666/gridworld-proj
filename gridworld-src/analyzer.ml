@@ -51,6 +51,15 @@ let rec find_node (scope : symbol_table) n =
 		Some(parent) -> find_node parent n
 		| _ -> raise Not_found
 
+let rec check_expr_nodes (scope : symbol_table) (e: Ast.expr) = 
+	match e with 
+	Noexpr -> SNoexpr(SVoid)
+	| Int_Lit(a) -> SInt_Lit(a,SInt)
+	| Bool_Lit(a) -> SBool_Lit(a,SBool)
+	| String_Lit(a) -> SString_Lit(a,SString)
+	| Id(str) -> 	SId(str, SString)
+	| _ -> raise (Failure("wrong arguments"))
+
 let rec check_expr (scope : symbol_table) (e: Ast.expr) = 
 	match e with 
 	Noexpr -> SNoexpr(SVoid)
@@ -170,6 +179,27 @@ let rec check_stmt (scope : symbol_table) (stmt : Ast.stmt) = match stmt with
 				SList(exprs)
 	| Choose(e) ->
 		let exprs = List.fold_left (fun a b ->
+			let expr = check_expr_nodes scope b in
+				let t = type_expr expr in
+							expr :: a) [] e in
+					SChoose(exprs)
+	| Goto(e) ->
+		let expr = check_expr_nodes scope e in
+						SGoto(expr)
+	| Read -> SRead
+
+			
+and  check_stmt_list (scope : symbol_table) (stml : Ast.stmt list) =
+	List.fold_left (fun a s -> let stmt = check_stmt scope s in stmt::a) [] stml
+
+let rec check_stmt_snd (scope : symbol_table) (stmt : Ast.stmt) = match stmt with
+	| If(expr, stmt1, stmt2) ->
+		check_stmt_list_snd scope stmt1;
+		check_stmt_list_snd scope stmt2 
+	| While(expr, stmt) ->
+		check_stmt_list_snd scope stmt
+	| Choose(e) -> (
+		List.fold_left (fun a b ->
 			let expr = check_expr scope b in
 				let t = type_expr expr in
 					if t <> SString then
@@ -184,9 +214,9 @@ let rec check_stmt (scope : symbol_table) (stmt : Ast.stmt) = match stmt with
 							expr :: a
 						with
 							Not_found ->
-							raise (Failure ("Node not found")))) [] e in
-					SChoose(exprs)
-	| Goto(e) ->
+							raise (Failure ("Node not found")))) [] e )
+
+	| Goto(e) -> (
 		let expr = check_expr scope e in
 			let t = type_expr expr in
 				if t <> SString then
@@ -198,15 +228,16 @@ let rec check_stmt (scope : symbol_table) (stmt : Ast.stmt) = match stmt with
 						| Id(str) -> str
 						| _ -> raise (Failure "Wrong expression type in Goto") in 
 						let _ = find_node scope id in
-						SGoto(expr)
+						[expr]
 						
 					with
 						Not_found ->
-						raise (Failure ("Node not found")))
+						raise (Failure ("Node not found"))))
+	| _ -> [SNoexpr(SVoid)]
 
 			
-and  check_stmt_list (scope : symbol_table) (stml : Ast.stmt list) =
-	List.fold_left (fun a s -> let stmt = check_stmt scope s in stmt::a) [] stml
+and  check_stmt_list_snd (scope : symbol_table) (stml : Ast.stmt list) =
+	let _ = List.fold_left (fun a s -> let stmt = check_stmt_snd scope s in stmt::a) [] stml in [SNoexpr(SVoid)]
 
 let rec check_var_type (scope : symbol_table) (v : Ast.mytypes) = match v with
 	Ast.Void -> SVoid
@@ -266,6 +297,10 @@ List.fold_left (fun a s -> let stmt = check_stmt scope s in
 			check_node_stmt scope s; stmt :: a
 		| _ -> stmt :: a) [] stml
 
+let process_stmt_snd (scope : symbol_table) (stml : Ast.stmt list)=
+List.fold_left (fun a s -> let stmt = check_stmt_snd scope s in
+	stmt :: a) [] stml
+
 let check_func_decl (env : environment) (f : Ast.fdecl) =
 	let scope' = { env.scope with parent = Some(env.scope); variables = []; nodes = env.scope.nodes; functions = env.scope.functions } in
 	let t = check_var_type env.scope f.ftype in
@@ -314,6 +349,9 @@ let process_node_decl (env : environment) (n : Ast.ndecl) =
 			with Not_found ->
 				check_node_decl env n
 
+let process_nodes (env : environment) (n : Ast.ndecl) =
+	process_stmt_snd env.scope n.body
+
 let process_global_decl (env : environment) (g : Ast.vdecl) =
 	try
 		let _ = check_id env.scope g.vname in 
@@ -329,4 +367,5 @@ let check_program (p : Ast.program) =
 	let globals = List.fold_left (fun a g -> process_global_decl env g :: a) [] (List.rev vs) in
 	let funcs = List.fold_left (fun a f -> process_func_decl env f :: a) [] (List.rev fs) in
 	let nodes = List.fold_left (fun a n -> process_node_decl env n :: a) [] ns in
+	let _ = List.fold_left (fun a n -> process_nodes env n :: a) [] ns in
 	globals, funcs, nodes
