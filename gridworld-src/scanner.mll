@@ -41,6 +41,9 @@ rule token = parse
 | "string" { STRING }
 (* Built-in Func *)
 | "print" {PRINT}
+| "list" {LIST}
+| "goto" {GOTO}
+| "choose" {CHOOSE}
 | eof { EOF } (* End of file *)
 
 (* Integers *)

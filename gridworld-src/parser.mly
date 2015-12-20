@@ -83,8 +83,8 @@ stmt_list:
 stmt:
   expr SEMI {Expr($1)}
 	| PRINT LPAREN expr RPAREN SEMI { Print($3) }
-  | LIST LPAREN actuals_opt RPAREN { List($3) }
-  | CHOOSE LPAREN actuals_opt RPAREN { Choose($3) }
+  | LIST LPAREN actuals_opt RPAREN SEMI{ List($3) }
+  | CHOOSE LPAREN actuals_opt RPAREN SEMI{ Choose($3) }
   | GOTO LPAREN expr RPAREN SEMI { Goto($3) }
   | IF LPAREN expr RPAREN LBRACE stmt_list RBRACE { If($3, $6, [])}
 	| IF LPAREN expr RPAREN LBRACE stmt_list RBRACE ELSE LBRACE stmt_list RBRACE { If($3, $6, $10)}
