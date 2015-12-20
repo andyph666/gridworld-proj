@@ -25,6 +25,7 @@ type sstmt =
 	| SWhile of sexpr * sstmt list
 	| SExpr of sexpr
 	| SReturn of sexpr
+	| SRead
 
 
 type svdecl = {

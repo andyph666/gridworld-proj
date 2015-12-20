@@ -44,6 +44,7 @@ rule token = parse
 | "list" {LIST}
 | "goto" {GOTO}
 | "choose" {CHOOSE}
+| "read" {READ}
 | eof { EOF } (* End of file *)
 
 (* Integers *)
