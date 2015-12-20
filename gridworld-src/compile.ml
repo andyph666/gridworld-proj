@@ -10,7 +10,8 @@ open Sast
 
 	let rec print_list = function 
 		[] -> ()
-		| e::l -> print_int e ; print_string " " ;;
+		| e::l -> print_int e ; print_string " "; print_list l;;
+
 	let rec print_expr (e : Sast.sexpr) = 
 		match e with
 		SNoexpr(_) -> print_string ""
@@ -29,7 +30,7 @@ open Sast
 			Add -> "+" | Sub -> "-" | Mult -> "*" | Div -> "/"
 		      | Equal -> "==" | Neq -> "!="
 		      | Less -> "<" | Leq -> "<=" | Greater -> ">" | Geq -> ">=" | Mod -> "%"
-		  	  | And -> " and " | Or -> " or ");
+		  	  | And -> " and " | Or -> " or "|_ ->"");
 		      print_expr(e2);
 	  	| SCall(f, expr_list,_) -> 
 			print_string f ;
@@ -40,43 +41,53 @@ open Sast
 				| e::tl -> print_expr e; print_string ", "; print_expr_list_comma tl 
 				in print_expr_list_comma (List.rev expr_list); 
 				print_string ")";;
-
+	let rec print_expr_noquote (e : Sast.sexpr) = 
+		match e with
+		| SString_Lit(s,_) -> print_string ( s );
+	  	| _ -> print_string"";;
 	let rec print_stmt (s: Sast.sstmt)= match s with
-		SExpr(e) -> print_string "\t";(print_expr e)  :: []
-	  | SPrint(e) -> 
-		  print_string "\t";print_string ("print (") ;
-		  print_expr e ;
-		  print_string (")"):: []
-	  | SWhile(e, s) -> 
-		  print_string "\t";print_string("while (") ;
-		  print_expr (e) ;
-		  print_string ("):") ::
-	  	(List.map print_string("test"::[]); (List.concat (List.rev (List.map print_stmt s))))
-	  | SReturn(e) -> 
-	  print_string "\t";print_string("return ");
-	  print_expr e :: [];
-	  |SList(e) -> 
-	  	print_list(range 1 3)::[];
-	  |SChoose(e) -> print_string("choose")::[];
-	  |SGoto(e) ->
-	  	print_string "\t";print_expr e ::[];
-	  | SIf(e1, s1, s2) ->  
+		SExpr(e) -> print_string "\t";(print_expr e)
+	 | SPrint(e) ->
+		 print_string "\t";print_string ("print (") ;
+		 print_expr e ;
+		 print_string (")")
+	 | SWhile(e, s) ->
+		 print_string "\t";print_string("while (") ;
+		 print_expr (e) ;
+		 print_string ("):\n") ;
+		 List.iter (fun a-> (print_stmt a; print_string"\n")) s;
+	  		print_string "\n"
+	 | SReturn(e) ->
+	 	print_string "\t";print_string("return ");
+	 	print_expr e
+	 |SList(e) ->
+	 	print_string "\tprint(\"";
+	  	List.iter2 (fun a b-> (print_int a;print_string ": "; print_expr_noquote b;print_string"\\n")) (range 1 (List.length(e))) e;
+	  	print_string "\")"
+	 |SChoose(e) -> 
+	 	print_string "\tchoice = int(input(\"Enter a choice: \"))\n";
+	 	(*List.iter2 (fun a b-> (print_string "\tif (choice==";print_int a;print_string "):\n\t\t"; print_expr b;print_string"()\n")) (range 1 (List.length(e))) e;
+	 	*)print_string "\telse:\n\t\tchoice = int(input(\"Enter a choice: \"))\n"
+	 |SGoto(e) ->
+	  	print_string "\t";print_expr e; print_string"()\n";
+	 | SIf(e1, s1, s2) ->
 	  		match s2 with
-	  		[] -> 
+	  		[] ->
 	  			print_string "\t";
 	  			print_string("if ");
 	  			print_expr e1 ;
-	  			print_string(":\n")::[];
-	  			(List.map print_string("\t"::[]); (List.concat (List.rev (List.map print_stmt s1))));
-	  		|_ -> 
+	  			print_string(":\n");
+	  			print_string ("\t"); List.iter print_stmt s1;
+	  			print_string("")
+	  		|_ ->
 	  			print_string "\t";
 	  			print_string("if ");
 	  			print_expr e1;
-	  			print_string(":\n") :: [];
-	  			(List.map print_string("\t"::[]); (List.concat (List.rev (List.map print_stmt s1))));
-	  		 	print_string("\n\telse:\n")::[];
-	  		 	(List.map print_string("\t"::[]); (List.concat (List.rev (List.map print_stmt s2))));;
-	  
+	  			print_string(":\n");
+	  			print_string ("\t"); List.iter print_stmt s1;
+	  		 	print_string ("\n\telse:\n");
+	  		 	print_string("\t"); List.iter print_stmt s2;
+	  		 	print_string ""
 
  	let rec print_type (t: Sast.t)= function
 	SVoid -> print_string "void ";
@@ -105,7 +116,7 @@ open Sast
 	let rec print_stmt_list (p : Sast.sstmt list) = 
 	match p with
 		[] -> print_string "";
-		| hd::[] ->	print_string ""
+		| hd::[] ->	print_stmt hd; print_string "\n";
 		| hd::tl -> print_stmt hd; print_string "\n"; print_stmt_list tl;;
 
 	let rec print_sndecl  (f : Sast.sndecl) = match f with
