@@ -27,16 +27,30 @@ let type_expr (se : Sast.sexpr) : Sast.t =
 
 let rec check_id (scope : symbol_table) id =
 	try
-		let (_, decl, t) = List.find(fun (n, _, _) -> n = id ) scope.variables in decl, t
+		let (_, decl, t) = List.find(fun (n, _, _) -> n = id ) scope.variables in t
 	with Not_found -> match scope.parent with
 		Some(parent) -> check_id parent id
+		| _ -> try
+					let n = List.find(fun c -> c.nname = id ) scope.nodes in SVoid
+				with Not_found -> match scope.parent with
+					Some(parent) -> check_id parent id
+					| _ -> raise Not_found
+
+let rec find_func (scope : symbol_table) f =
+	let l = scope.functions in
+	try 
+		List.find(fun c -> c.fname = f) l
+	with Not_found -> match scope.parent with
+		Some(parent) -> find_func parent f
 		| _ -> raise Not_found
 
-let find_func (l : sfdecl list) f =
-	List.find(fun c -> c.fname = f) l
-
-let find_node (l : sndecl list) n =
-	List.find(fun c -> c.nname = n) l
+let rec find_node (scope : symbol_table) n =
+	let l = scope.nodes in
+	try 
+		List.find(fun c -> c.nname = n) l
+	with Not_found -> match scope.parent with
+		Some(parent) -> find_node parent n
+		| _ -> raise Not_found
 
 let rec check_expr (scope : symbol_table) (e: Ast.expr) = 
 	match e with 
@@ -45,7 +59,7 @@ let rec check_expr (scope : symbol_table) (e: Ast.expr) =
 	| Bool_Lit(a) -> SBool_Lit(a,SBool)
 	| String_Lit(a) -> SString_Lit(a,SString)
 	| Id(str) -> 	(try
-						let (decl, t) = check_id scope str in SId(str, t)
+						let t = check_id scope str in SId(str, t)
 					with Not_found -> raise (Failure ("Unrecognized Id " ^ str)))
 	| Uniop(_,_) as u -> check_uniop scope u
 	| Binop(_,_,_) as b -> check_binop scope b
@@ -92,19 +106,22 @@ and check_binop (scope : symbol_table) binop = match binop with
 and check_assign (scope : symbol_table) a = match a with
 	Ast.Assign(id, expr) ->
 		try(
-			let (decl, t) = check_id scope id in
+			let t = check_id scope id in
 			let e = check_expr scope expr in
 			let t2 = type_expr e in
 			if t <> t2 then raise (Failure "Incorrect type assignment.") 
 			else SAssign(id, e, t))
 		with Not_found -> let e = check_expr scope expr in 
-							let t = type_expr e in SAssign(id, e, t)
+							let t = type_expr e in 
+							let v={ svtype = t; svname = id; svexpr = e}
+		in scope.variables <- (v.svname,v,t) :: scope.variables; SAssign(id, e, t)
+							
 	| _ -> raise (Failure "Not an assignment")
 
 and check_call (scope : symbol_table) c = match c with
 	Ast.Call(id, el) ->
 		(try
-			let f = find_func scope.functions id in
+			let f = find_func scope id in
 			let exprs = List.fold_left2 (fun a b c ->
 					let t = b.svtype in
 					let expr = check_expr scope c in
@@ -164,7 +181,7 @@ let rec check_stmt (scope : symbol_table) (stmt : Ast.stmt) = match stmt with
 							 String_Lit(a) -> a
 							| Id(str) -> str
 							| _ -> raise (Failure "Wrong expression type in Choose") in 
-							let _ = find_node scope.nodes id in
+							let _ = find_node scope id in
 							expr :: a
 						with
 							Not_found ->
@@ -181,7 +198,7 @@ let rec check_stmt (scope : symbol_table) (stmt : Ast.stmt) = match stmt with
 						 String_Lit(a) -> a
 						| Id(str) -> str
 						| _ -> raise (Failure "Wrong expression type in Goto") in 
-						let _ = find_node scope.nodes id in
+						let _ = find_node scope id in
 						SGoto(expr)
 						
 					with
@@ -276,7 +293,7 @@ let check_node_decl (env : environment) (n : Ast.ndecl) =
 
 let process_func_decl (env : environment) (f : Ast.fdecl) =
 	try
-		let _ = find_func env.scope.functions f.fname in
+		let _ = find_func env.scope f.fname in
 			raise (Failure ("Function already declared with name " ^ f.fname))
 	with Not_found ->
 		if (f.fname = "print" || f.fname = "goto" || f.fname = "list" || f.fname = "choose" || f.fname = "main") 
@@ -286,14 +303,14 @@ let process_func_decl (env : environment) (f : Ast.fdecl) =
 
 let process_node_decl (env : environment) (n : Ast.ndecl) =
 	try
-		let _ = find_func env.scope.functions n.nname in
+		let _ = find_func env.scope n.nname in
 			raise (Failure ("Node with same name as function " ^ n.nname))
 	with Not_found ->
 		if (n.nname = "print" || n.nname= "goto" || n.nname = "list" || n.nname = "choose") 
 		then raise (Failure "A node cannot have same name as built-in function")
 		else
 			try
-				let _ = find_node env.scope.nodes n.nname in
+				let _ = find_node env.scope n.nname in
 					raise (Failure ("Node already declared with name  " ^ n.nname))
 			with Not_found ->
 				check_node_decl env n
