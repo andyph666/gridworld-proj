@@ -11,7 +11,7 @@ string enemyName = "";
 int enemyLvl = 1;
 string enemySkill1 = "";
 string enemySkill2 = "";
-int enemyHp = 100;
+int enemyHp = 30;
 main{
     print ("Welcome to Pokeymans, the premium pet gladiator game in the world!");
     print ("What's your name?");
@@ -40,12 +40,19 @@ main{
     }
     if(choice ==2){
         starterName = "BlacBois";
+        addSkills("Splash","Waterboard");
     }
     if(choice ==3){
         starterName = "Penusaur";
+        addSkills("Thorn Whip","Throw Leaf");
     }
-    else{
-        starterName = "Potatochu";
+    if(choice!=1){
+        if(choice !=2){
+            if (choice !=3){
+                starterName = "Potatochu";
+                addSkills("Hurp","Derp");
+            }
+        }
     }
     print("Time to start your adventure!:");
     goto(mainMenu);
@@ -113,7 +120,7 @@ node leaveShop{
 node initBattle{
     enemyName = "ratatatatata";
     enemyLvl = starterLvl;
-    enemyHp = 100;
+    enemyHp = 30;
     addEnemySkills("bite","rabies");
     goto(fight);
 }
@@ -121,12 +128,30 @@ node fight{
     print("you are fighting a");
     print(enemyName);
     print("what will you do?");
-    list(starterSkill1,starterSkill2,"use pokeyball","flee");
-    choose(useSkill1,useSkill2,useBall,flee);
+    print("1.");
+    print(starterSkill1);
+    print("2.");
+    print(starterSkill2);
+    print("3. use pokeyball");
+    print("4. flee");
+    choice = 0;
+    readInt(choice);
+    if(choice ==1){
+        useSkill1();
+    }
+    if(choice ==2){
+        useSkill2();
+    }
+    if(choice ==3){
+        goto(useBall);
+    }
+    if(choice ==4){
+        goto(flee);
+    }
     useEnemySkill();
     goto(processBattle);
 }
-node useSkill1{
+int function useSkill1(){
     print(starterName);
     print("uses");
     print(starterSkill1);
@@ -135,11 +160,11 @@ node useSkill1{
     roll(d1);
     roll(d2);
     print(d1+d2);
-    print("\n");
     enemyHp= enemyHp-d1-d2;
-    print("damage!");
+    print("damage!\n");
+    return 0;
 }
-node useSkill2{
+int function useSkill2(){
     print(starterName);
     print("uses");
     print(starterSkill2);
@@ -148,9 +173,9 @@ node useSkill2{
     roll(d1);
     roll(d2);
     print(d1+d2);
-    print("\n");
     enemyHp= enemyHp-d1-d2;
-    print("damage!");
+    print("damage!\n");
+    return 0;
 }
 int function useEnemySkill(){
     print(enemyName);
@@ -164,16 +189,14 @@ int function useEnemySkill(){
     if(chooseSkill >=3){
         print(enemySkill1);     
         print(d1+d2);
-        print("\n");
         starterHp= starterHp-d1-d2;
-        print("damage!");
+        print("damage!\n");
     }
     else{
         print(enemySkill2);
         print(d1+d2);
-        print("\n");
         starterHp= starterHp-d1-d2;
-        print("damage!");
+        print("damage!\n");
 
     }
     return 0;
@@ -203,7 +226,7 @@ node flee{
     print("only cowards flee, you fail the game...");
 }
 node victory{
-    starterHp = starterHp + 30;
+    starterHp = starterHp + 50;
     print("VICTORY");
     spoils = 0;
     roll(spoils);
@@ -221,7 +244,7 @@ int function addSkills(string a,string b){
     return 0;
 }
 int function addEnemySkills(string a,string b){
-    starterSkill1 = a;
-    starterSkill2 = b;
+    enemySkill1 = a;
+    enemySkill2 = b;
     return 0;
 }

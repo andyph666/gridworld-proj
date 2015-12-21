@@ -65,14 +65,14 @@ open Sast
 	 |SList(e) ->
 	 	print_string tab;
 	 	print_string "print(\"\\n";
-	  	List.iter2 (fun a b-> (print_int a;print_string ": "; print_expr_noquote b;print_string"\\n")) (range 1 (List.length(e))) e;
+	  	List.iter2 (fun a b-> (print_int a;print_string ": "; print_expr_noquote b;print_string"\\n")) (range 1 (List.length(e))) (List.rev e);
 	  	print_string "\")\n"
 	 |SChoose(e) -> 
 	 	print_string tab;
 	 	print_string"choice = int(input(\"Enter a choice: \"))\n";
 	 	print_string tab;print_string "\t";
 	 	print_string "while(choice!=-1):\n";
-	 	List.iter2 (fun a b-> (print_string tab;print_string "\t\tif (choice==";print_int a;print_string "):\n"; print_string tab;print_string "\t\t\t"; print_expr b;print_string"()\n")) (range 1 (List.length(e))) e;
+	 	List.iter2 (fun a b-> (print_string tab;print_string "\t\tif (choice==";print_int a;print_string "):\n"; print_string tab;print_string "\t\t\t"; print_expr b;print_string"()\n")) (range 1 (List.length(e))) (List.rev e);
 	 	print_string tab;print_string "\t\telse:\n";print_string tab;print_string"\t\t\tchoice = int(input(\"Invalid Input! Please Re-enter: \"))\n";
 	 |SGoto(e) ->
 	  	print_string tab;print_expr e; print_string"()\n";
@@ -192,6 +192,6 @@ open Sast
 	let translate (variables, functions, nodes) =
 		print_string "from random import randint\n";
 		List.iter print_svdecl (List.rev variables);
-		print_sfdecl functions variables;
-		print_sndecl nodes variables;
+		print_sfdecl (List.rev functions) variables;
+		print_sndecl (List.rev nodes) variables;
 		print_string "if __name__ == '__main__':\n\tmain()";
