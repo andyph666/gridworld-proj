@@ -46,7 +46,7 @@ open Sast
 		| SString_Lit(s,_) -> print_string ( s );
 	  	| _ -> print_string"";;
 	let rec print_stmt (s: Sast.sstmt)= match s with
-		SExpr(e) -> print_string "\t";(print_expr e)
+		SExpr(e) -> print_string "\t";(print_expr e); print_string"\n";
 	 | SPrint(e) ->
 		 print_string "\t";print_string ("print (") ;
 		 print_expr e ;
@@ -63,7 +63,7 @@ open Sast
 	 |SList(e) ->
 	 	print_string "\tprint(\"\\n";
 	  	List.iter2 (fun a b-> (print_int a;print_string ": "; print_expr_noquote b;print_string"\\n")) (range 1 (List.length(e))) e;
-	  	print_string "\")"
+	  	print_string "\")\n"
 	 |SChoose(e) -> 
 	 	print_string "\tchoice = int(input(\"Enter a choice: \"))\n\twhile(choice!=-1):\n";
 	 	List.iter2 (fun a b-> (print_string "\t\tif (choice==";print_int a;print_string "):\n\t\t\t"; print_expr b;print_string"()\n")) (range 1 (List.length(e))) e;
