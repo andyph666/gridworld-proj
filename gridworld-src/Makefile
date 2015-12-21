@@ -15,4 +15,4 @@ test: compiler
 
 .PHONY: clean
 clean:
-	rm -f parser.mli scanner.ml parser.ml parser.output *.cmo *cmi grid *~
+	rm -f parser.mli scanner.ml parser.ml parser.output *.cmo *cmi test-*.py  test-*.i.* grid *~
