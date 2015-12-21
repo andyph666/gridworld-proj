@@ -1,0 +1,227 @@
+string name = "";
+int gold = 0;
+string gender = "";
+int balls = 0;
+string starterName = "";
+int starterLvl = 1;
+string starterSkill1 = "";
+string starterSkill2 = "";
+int starterHp = 100;
+string enemyName = "";
+int enemyLvl = 1;
+string enemySkill1 = "";
+string enemySkill2 = "";
+int enemyHp = 100;
+main{
+    print ("Welcome to Pokeymans, the premium pet gladiator game in the world!");
+    print ("What's your name?");
+    readStr(name);
+    gold = 100;
+    balls = 0;
+    print ("Are you a boy or a girl?");
+    list("Boy","Girl");
+    choice = 0;
+    readInt(choice);
+    if(choice ==1){
+        gender = "boy";
+    }
+    if(choice ==2){
+        gender = "girl";
+    }
+    else{
+        gender = "undefined";
+    }
+    print("Choose your starter pokeyman!");
+    list("Charitard","Blakbois","Penusaur");
+    readInt(choice);
+    if(choice ==1){
+        starterName = "Charitard";
+        addSkills("Hot Breath","Spicy Breath");
+    }
+    if(choice ==2){
+        starterName = "BlacBois";
+    }
+    if(choice ==3){
+        starterName = "Penusaur";
+    }
+    else{
+        starterName = "Potatochu";
+    }
+    print("Time to start your adventure!:");
+    goto(mainMenu);
+}
+node mainMenu{
+    while (1==1){
+        print ("What would you like to do?");
+        list("Battle!","Shop!","Procrastinate!","Leave");
+        choose(initBattle,shop,procrastinate,leave);
+    }
+}
+node leave{
+    print("Goodbye~");
+}
+node procrastinate{
+    sum = 0;
+    index = 1;
+    dieRoll =0;
+    roll(dieRoll);
+    print("you roll a dice and you get a total of");
+    print(dieRoll);
+    goto(mainMenu);
+}
+node shop{
+    print ("you are in the store");
+    print ("you have :");
+    print(gold);
+    list("buy a sandwich (20g)","Buy a pokeyball (10g)","Leave");
+    choose(sandwich,buyBall,leaveShop);
+}
+node sandwich{
+    rand = 0;
+    roll(rand);
+    if(gold>=20){
+        gold = gold-20;
+        if(rand >=3){
+            print("you ate a molded sandwich... Disgusting! (HP-10)");
+            starterHp = starterHp - 10;
+        }
+        else{
+            print("you ate an overpriced sandwich... The inflation these days... (HP+10)");
+            starterHp = starterHp + 10;
+        }
+    }
+    else{
+        print("you can't afford it...");
+    }
+    goto(shop);
+}
+node buyBall{
+    if(gold>=10){
+        print ("you buy a designer pokeyball(TM)");
+        gold= gold -10;
+        balls = balls+1;
+    }
+    else{
+        print("you can't afford it...");
+    }
+    goto(shop);
+}
+
+node leaveShop{
+    goto(mainMenu);
+}
+node initBattle{
+    enemyName = "ratatatatata";
+    enemyLvl = starterLvl;
+    enemyHp = 100;
+    addEnemySkills("bite","rabies");
+    goto(fight);
+}
+node fight{
+    print("you are fighting a");
+    print(enemyName);
+    print("what will you do?");
+    list(starterSkill1,starterSkill2,"use pokeyball","flee");
+    choose(useSkill1,useSkill2,useBall,flee);
+    useEnemySkill();
+    goto(processBattle);
+}
+node useSkill1{
+    print(starterName);
+    print("uses");
+    print(starterSkill1);
+    d1 = 0;
+    d2 = 0;
+    roll(d1);
+    roll(d2);
+    print(d1+d2);
+    print("\n");
+    enemyHp= enemyHp-d1-d2;
+    print("damage!");
+}
+node useSkill2{
+    print(starterName);
+    print("uses");
+    print(starterSkill2);
+    d1 = 0;
+    d2 = 0;
+    roll(d1);
+    roll(d2);
+    print(d1+d2);
+    print("\n");
+    enemyHp= enemyHp-d1-d2;
+    print("damage!");
+}
+int function useEnemySkill(){
+    print(enemyName);
+    print("uses");
+    chooseSkill = 0;
+    d1 = 0;
+    d2 = 0;
+    roll(d1);
+    roll(d2);
+    roll(chooseSkill);
+    if(chooseSkill >=3){
+        print(enemySkill1);     
+        print(d1+d2);
+        print("\n");
+        starterHp= starterHp-d1-d2;
+        print("damage!");
+    }
+    else{
+        print(enemySkill2);
+        print(d1+d2);
+        print("\n");
+        starterHp= starterHp-d1-d2;
+        print("damage!");
+
+    }
+    return 0;
+}
+node processBattle{
+    if (enemyHp<=0){
+        goto(victory);
+    }
+    if (starterHp<=0){
+        goto(defeat);
+    }
+    goto(fight);
+}
+node useBall{
+    if(balls >=1){
+        print("you throw the ball as hard as you can and deal critical damage to the enemy");
+        balls = balls-1;
+        enemyHp = 0;
+        goto(victory);
+    }
+    else{
+        print("you don't have any balls you dunce");
+    }
+    goto(fight);
+}
+node flee{
+    print("only cowards flee, you fail the game...");
+}
+node victory{
+    starterHp = starterHp + 30;
+    print("VICTORY");
+    spoils = 0;
+    roll(spoils);
+    gold = gold + spoils*10;
+    goto(mainMenu);
+}
+node defeat{
+    print("You have been defeated. That was a shameful display. Slink home.");
+    starterHp=10;
+    goto(mainMenu);
+}
+int function addSkills(string a,string b){
+    starterSkill1 = a;
+    starterSkill2 = b;
+    return 0;
+}
+int function addEnemySkills(string a,string b){
+    starterSkill1 = a;
+    starterSkill2 = b;
+    return 0;
+}

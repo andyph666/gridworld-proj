@@ -188,6 +188,12 @@ let rec check_stmt (scope : symbol_table) (stmt : Ast.stmt) = match stmt with
 						SGoto(expr)
 	| ReadInt(e) -> SReadInt(check_expr scope e)
 	| ReadStr(e) -> SReadStr(check_expr scope e)
+	| Roll(e) -> 
+		let expr = check_expr scope e in
+			let t = type_expr expr in
+				if (t = SInt) then
+					SRoll(expr)
+				else raise (Failure "Roll takes only type int")
 
 
 			

@@ -25,6 +25,13 @@ def start():
 
 	print ("You shiver as the biting cold from a dripping air conditioner assaults your bare skin")
 
+	while (havePoison==0):
+		if havePoison==0:
+				if havePoison==0:
+						if havePoison==0:
+								havePoison = 0
+
+
 	room()
 
 	exit()
@@ -39,32 +46,32 @@ def room():
 		print ("You spot a steel door to your left, a nightstand on your right, and a large red button on the ceiling.")
 		print("\n1: Press the button\n2: Check the nightstand\n3: Try the door\n")
 		choice = int(input("Enter a choice: "))
-	while(choice!=-1):
-		if (choice==1):
-			button1()
-		if (choice==2):
-			nightstand1()
-		if (choice==3):
-			door1()
-		else:
-			choice = int(input("Invalid Input! Please Re-enter: "))
-	
+		while(choice!=-1):
+			if (choice==1):
+				button1()
+			if (choice==2):
+				nightstand1()
+			if (choice==3):
+				door1()
+			else:
+				choice = int(input("Invalid Input! Please Re-enter: "))
+
 	else:
 		print ("You spot a steel door to your left, a nightstand on your right, and a large red button on the ceiling.")
 		print("\n1: Consume the contents of the jar\n2: Press the button\n3: Check the nightstand\n4: Try the door\n")
 		choice = int(input("Enter a choice: "))
-	while(choice!=-1):
-		if (choice==1):
-			die()
-		if (choice==2):
-			button1()
-		if (choice==3):
-			nightstand1()
-		if (choice==4):
-			door1()
-		else:
-			choice = int(input("Invalid Input! Please Re-enter: "))
-	
+		while(choice!=-1):
+			if (choice==1):
+				die()
+			if (choice==2):
+				button1()
+			if (choice==3):
+				nightstand1()
+			if (choice==4):
+				door1()
+			else:
+				choice = int(input("Invalid Input! Please Re-enter: "))
+
 	exit()
 def door1():
 	global triedButton;
@@ -115,10 +122,10 @@ def topdrawer():
 		topDrawerLooted = 1
 		havLighter = 1
 		haveCigs = 1
-	
+
 	else:
 		print ("There's nothing in here")
-	
+
 	nightstand1()
 
 	exit()
@@ -134,10 +141,10 @@ def bottomdrawer():
 		print ("Underneath is a jar with mysterious contents")
 		botDrawerLooted = 1
 		havePoison = 1
-	
+
 	else:
 		print ("There's nothing in here")
-	
+
 	nightstand1()
 
 	exit()
@@ -150,7 +157,7 @@ def button1():
 	global botDrawerLooted;
 	if triedButton==1:
 		button2()
-	
+
 	print ("You stare at the button apprehensively, then tender a hesitant poke")
 
 	print ("Nothing really happens")
@@ -178,7 +185,7 @@ def button2():
 	global botDrawerLooted;
 	if triedButton==2:
 		button3()
-	
+
 	print ("You press the button again")
 
 	print ("Nothing really happens")

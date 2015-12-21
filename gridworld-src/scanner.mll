@@ -46,6 +46,7 @@ rule token = parse
 | "choose" {CHOOSE}
 | "readInt" {READINT}
 | "readStr" {READSTR}
+| "roll" {ROLL}
 | eof { EOF } (* End of file *)
 
 (* Integers *)

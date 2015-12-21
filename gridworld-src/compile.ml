@@ -2,7 +2,7 @@ open Ast
 open Sast
 
 
-	let addTab s = print_string "\t"
+	let addTab s = s^"\t"
 	let range a b =
 	  	let rec aux a b =
       		if a > b then [] else a :: aux (a+1) b  in
@@ -44,6 +44,7 @@ open Sast
 	let rec print_expr_noquote (e : Sast.sexpr) = 
 		match e with
 		| SString_Lit(s,_) -> print_string ( s );
+		| SId(decl,_) ->  print_string decl;
 	  	| _ -> print_string"";;
 	let rec print_stmt (s: Sast.sstmt) (tab:string)= match s with
 		SExpr(e) -> print_string tab;(print_expr e); print_string"\n";
@@ -55,8 +56,9 @@ open Sast
 		 print_string tab;print_string("while (") ;
 		 print_expr (e) ;
 		 print_string ("):\n") ;
-		 List.iter (fun a-> (print_stmt a; print_string"\n")) s;
-	  		print_string "\n"
+		 print_string tab;
+		 print_stmt_wTab s (addTab tab);
+	  	print_string "\n"
 	 | SReturn(e) ->
 	 	print_string tab;print_string("return ");
 	 	print_expr e
@@ -75,13 +77,17 @@ open Sast
 	 |SGoto(e) ->
 	  	print_string tab;print_expr e; print_string"()\n";
 	 |SReadInt(e) ->
-	 	print_string"\t";
+	 	print_string tab;
 	 	print_expr e;
 	 	print_string " = int(raw_input());\n"
 	 |SReadStr(e) ->
-	 	print_string"\t";
+	 	print_string tab;
 	 	print_expr e;
 	 	print_string " = str(raw_input());\n"
+	 |SRoll(e) ->
+	 	print_string tab;
+	 	print_expr e;
+	 	print_string " = randint(1,6);"
 	 | SIf(e1, s1, s2) ->
 	  		match s2 with
 	  		[] ->
@@ -89,16 +95,18 @@ open Sast
 	  			print_string("if ");
 	  			print_expr e1 ;
 	  			print_string(":\n");
-	  			print_stmt_wTab s1 "\t";
+	  			print_stmt_wTab s1 (addTab tab);
 	  			print_string("")
 	  		|_ ->
 	  			print_string tab;
 	  			print_string("if ");
 	  			print_expr e1;
 	  			print_string(":\n");
-	  			print_stmt_wTab s1 "\t";
-	  		 	print_string ("\n\telse:\n");
-	  		 	print_stmt_wTab s2 "\t";
+	  			print_stmt_wTab s1 (addTab tab);
+	  		 	print_string ("\n");
+	  		 	print_string tab;
+	  		 	print_string("\telse:\n");
+	  		 	print_stmt_wTab s2 (addTab tab);
 	  		 	print_string ""
 	and print_stmt_wTab (s:Sast.sstmt list) (tab:string) = match s with 
 		[] -> print_string "";
@@ -140,7 +148,7 @@ open Sast
 			print_string "def ";
 			print_string hd.nname; 
 			print_string "(";
-			print_string "): \n";
+			print_string "):";
 			print_globals v;
 			print_stmt_list (List.rev hd.sbody);
 			print_string "\texit()\n";
@@ -159,17 +167,31 @@ open Sast
 		[] -> print_string "";
 		| hd::[] ->	print_string("\n\tglobal "); print_string hd.svname; print_string ";\n";
 		| hd::tl -> print_string("\n\tglobal "); print_string hd.svname; print_string ";"; print_globals tl;;
-	let rec print_sfdecl  (f : Sast.sfdecl) = match f with
-		|_ ->
-		print_string "def ";
-		print_string f.fname; 
-		print_string "(";
-		print_param_list (List.rev f.sparams); 
-		print_string "): \n";
-		print_stmt_list (List.rev f.sbody)
-		(*List.iter print_stmt (List.rev f.sbody);*)
+	let rec print_sfdecl  (f : Sast.sfdecl list)(v: Sast.svdecl list) = match f with
+		[] -> print_string "";
+		| hd::[] ->	
+			print_string "def ";
+			print_string hd.fname; 
+			print_string "(";
+			print_param_list (List.rev hd.sparams);
+			print_string "):";
+			print_globals v;
+			print_stmt_list (List.rev hd.sbody);
+			print_string "\texit()\n";
+		| hd::tl -> 
+			print_string "def ";
+			print_string hd.fname; 
+			print_string "(";
+			print_param_list (List.rev hd.sparams);
+			print_string "):";
+			print_globals v;
+			print_stmt_list (List.rev hd.sbody);
+			print_string "\texit()\n";
+			print_sfdecl tl v;
+			print_string "";;
 	let translate (variables, functions, nodes) =
+		print_string "from random import randint\n";
 		List.iter print_svdecl (List.rev variables);
-		List.iter print_sfdecl (List.rev functions);
+		print_sfdecl functions variables;
 		print_sndecl nodes variables;
 		print_string "if __name__ == '__main__':\n\tmain()";

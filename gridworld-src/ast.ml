@@ -25,6 +25,7 @@ type stmt =
 	| Return of expr
 	| ReadInt of expr
 	| ReadStr of expr
+	| Roll of expr
 
 type mytypes = 
 	Int 

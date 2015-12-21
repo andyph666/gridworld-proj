@@ -27,6 +27,7 @@ type sstmt =
 	| SReturn of sexpr
 	| SReadInt of sexpr
 	| SReadStr of sexpr
+	| SRoll of sexpr
 
 
 type svdecl = {
