@@ -45,31 +45,35 @@ open Sast
 		match e with
 		| SString_Lit(s,_) -> print_string ( s );
 	  	| _ -> print_string"";;
-	let rec print_stmt (s: Sast.sstmt)= match s with
-		SExpr(e) -> print_string "\t";(print_expr e); print_string"\n";
+	let rec print_stmt (s: Sast.sstmt) (tab:string)= match s with
+		SExpr(e) -> print_string tab;(print_expr e); print_string"\n";
 	 | SPrint(e) ->
-		 print_string "\t";print_string ("print (") ;
+		 print_string tab;print_string ("print (") ;
 		 print_expr e ;
 		 print_string (")\n")
 	 | SWhile(e, s) ->
-		 print_string "\t";print_string("while (") ;
+		 print_string tab;print_string("while (") ;
 		 print_expr (e) ;
 		 print_string ("):\n") ;
 		 List.iter (fun a-> (print_stmt a; print_string"\n")) s;
 	  		print_string "\n"
 	 | SReturn(e) ->
-	 	print_string "\t";print_string("return ");
+	 	print_string tab;print_string("return ");
 	 	print_expr e
 	 |SList(e) ->
-	 	print_string "\tprint(\"\\n";
+	 	print_string tab;
+	 	print_string "print(\"\\n";
 	  	List.iter2 (fun a b-> (print_int a;print_string ": "; print_expr_noquote b;print_string"\\n")) (range 1 (List.length(e))) e;
 	  	print_string "\")\n"
 	 |SChoose(e) -> 
-	 	print_string "\tchoice = int(input(\"Enter a choice: \"))\n\twhile(choice!=-1):\n";
-	 	List.iter2 (fun a b-> (print_string "\t\tif (choice==";print_int a;print_string "):\n\t\t\t"; print_expr b;print_string"()\n")) (range 1 (List.length(e))) e;
-	 	print_string "\t\telse:\n\t\t\tchoice = int(input(\"Invalid Input! Please Re-enter: \"))\n"
+	 	print_string tab;
+	 	print_string"choice = int(input(\"Enter a choice: \"))\n";
+	 	print_string tab;print_string "\t";
+	 	print_string "while(choice!=-1):\n";
+	 	List.iter2 (fun a b-> (print_string tab;print_string "\t\tif (choice==";print_int a;print_string "):\n"; print_string tab;print_string "\t\t\t"; print_expr b;print_string"()\n")) (range 1 (List.length(e))) e;
+	 	print_string tab;print_string "\t\telse:\n";print_string tab;print_string"\t\t\tchoice = int(input(\"Invalid Input! Please Re-enter: \"))\n";
 	 |SGoto(e) ->
-	  	print_string "\t";print_expr e; print_string"()\n";
+	  	print_string tab;print_expr e; print_string"()\n";
 	 |SReadInt(e) ->
 	 	print_string"\t";
 	 	print_expr e;
@@ -81,24 +85,25 @@ open Sast
 	 | SIf(e1, s1, s2) ->
 	  		match s2 with
 	  		[] ->
-	  			print_string "\t";
+	  			print_string tab;
 	  			print_string("if ");
 	  			print_expr e1 ;
 	  			print_string(":\n");
-	  			print_string ("\t"); List.iter print_stmt_wTab s1;
+	  			print_stmt_wTab s1 "\t";
 	  			print_string("")
 	  		|_ ->
-	  			print_string "\t";
+	  			print_string tab;
 	  			print_string("if ");
 	  			print_expr e1;
 	  			print_string(":\n");
-	  			print_string ("\t"); List.iter print_stmt_wTab s1;
+	  			print_stmt_wTab s1 "\t";
 	  		 	print_string ("\n\telse:\n");
-	  		 	print_string("\t"); List.iter print_stmt_wTab s2;
+	  		 	print_stmt_wTab s2 "\t";
 	  		 	print_string ""
-	and print_stmt_wTab (s:Sast.sstmt) = 
-		print_stmt (s);
-		print_string("\t");;
+	and print_stmt_wTab (s:Sast.sstmt list) (tab:string) = match s with 
+		[] -> print_string "";
+		| hd::[] ->	 print_string tab;print_stmt hd tab;
+		| hd::tl -> print_string tab ;print_stmt hd tab;print_stmt_wTab tl tab;;
  	let rec print_type (t: Sast.t)= function
 	SVoid -> print_string "void ";
 	| SInt -> print_string "int ";
@@ -126,8 +131,8 @@ open Sast
 	let rec print_stmt_list (p : Sast.sstmt list) = 
 	match p with
 		[] -> print_string "";
-		| hd::[] ->	print_stmt hd; print_string "\n";
-		| hd::tl -> print_stmt hd; print_string "\n"; print_stmt_list tl;;
+		| hd::[] ->	print_string "\t";print_stmt hd ""; print_string "\n";
+		| hd::tl -> print_string "\t";print_stmt hd ""; print_string "\n"; print_stmt_list tl;;
 
 	let rec print_sndecl  (f : Sast.sndecl list)(v: Sast.svdecl list) = match f with
 		[] -> print_string "";
