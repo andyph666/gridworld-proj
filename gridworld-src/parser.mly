@@ -4,7 +4,7 @@
 %token EQ NEQ LT LEQ GT GEQ NOT	AND OR
 %token BREAK CONTINUE ELIF ELSE FOR FUNCTION RETURN WHILE IF
 %token INT VOID BOOL CHAR STRING
-%token PRINT GOTO LIST CHOOSE MAIN NODE READ
+%token PRINT GOTO LIST CHOOSE MAIN NODE READINT READSTR
 %token EOF
 
 %token <int> INT_LIT
@@ -90,7 +90,8 @@ stmt:
 	| IF LPAREN expr RPAREN LBRACE stmt_list RBRACE ELSE LBRACE stmt_list RBRACE { If($3, $6, $10)}
 	| WHILE LPAREN expr RPAREN LBRACE stmt_list RBRACE { While($3, $6) }
 	| RETURN expr SEMI { Return($2) }
-  | READ LPAREN RPAREN SEMI { Read }
+  | READINT LPAREN expr RPAREN SEMI { ReadInt ($3)}
+  | READSTR LPAREN expr RPAREN SEMI { ReadStr ($3)}
 
 expr:
       INT_LIT       { Int_Lit($1) }

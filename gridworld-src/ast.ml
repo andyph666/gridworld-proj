@@ -23,7 +23,8 @@ type stmt =
 	| While of expr * stmt list
 	| Expr of expr
 	| Return of expr
-	| Read
+	| ReadInt of expr
+	| ReadStr of expr
 
 type mytypes = 
 	Int 

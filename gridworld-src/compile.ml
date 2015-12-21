@@ -61,19 +61,23 @@ open Sast
 	 	print_string "\t";print_string("return ");
 	 	print_expr e
 	 |SList(e) ->
-	 	print_string "\tprint(\"";
+	 	print_string "\tprint(\"\\n";
 	  	List.iter2 (fun a b-> (print_int a;print_string ": "; print_expr_noquote b;print_string"\\n")) (range 1 (List.length(e))) e;
 	  	print_string "\")"
 	 |SChoose(e) -> 
-	 	print_string "\tchoice = int(input(\"Enter a choice: \"))\n";
-	 	List.iter2 (fun a b-> (print_string "\tif (choice==";print_int a;print_string "):\n\t\t"; print_expr b;print_string"()\n")) (range 1 (List.length(e))) e;
-	 	print_string "\telse:\n\t\tchoice = int(input(\"Enter a choice: \"))\n"
+	 	print_string "\tchoice = int(input(\"Enter a choice: \"))\n\twhile(choice!=-1):\n";
+	 	List.iter2 (fun a b-> (print_string "\t\tif (choice==";print_int a;print_string "):\n\t\t\t"; print_expr b;print_string"()\n")) (range 1 (List.length(e))) e;
+	 	print_string "\t\telse:\n\t\t\tchoice = int(input(\"Invalid Input! Please Re-enter: \"))\n"
 	 |SGoto(e) ->
 	  	print_string "\t";print_expr e; print_string"()\n";
-	 (*|SRead(e) ->
+	 |SReadInt(e) ->
 	 	print_string"\t";
 	 	print_expr e;
-	 	print_string " = input();\n"*)
+	 	print_string " = int(raw_input());\n"
+	 |SReadStr(e) ->
+	 	print_string"\t";
+	 	print_expr e;
+	 	print_string " = str(raw_input());\n"
 	 | SIf(e1, s1, s2) ->
 	  		match s2 with
 	  		[] ->
@@ -81,18 +85,20 @@ open Sast
 	  			print_string("if ");
 	  			print_expr e1 ;
 	  			print_string(":\n");
-	  			print_string ("\t"); List.iter print_stmt s1;
+	  			print_string ("\t"); List.iter print_stmt_wTab s1;
 	  			print_string("")
 	  		|_ ->
 	  			print_string "\t";
 	  			print_string("if ");
 	  			print_expr e1;
 	  			print_string(":\n");
-	  			print_string ("\t"); List.iter print_stmt s1;
+	  			print_string ("\t"); List.iter print_stmt_wTab s1;
 	  		 	print_string ("\n\telse:\n");
-	  		 	print_string("\t"); List.iter print_stmt s2;
+	  		 	print_string("\t"); List.iter print_stmt_wTab s2;
 	  		 	print_string ""
-
+	and print_stmt_wTab (s:Sast.sstmt) = 
+		print_stmt (s);
+		print_string("\t");;
  	let rec print_type (t: Sast.t)= function
 	SVoid -> print_string "void ";
 	| SInt -> print_string "int ";
@@ -123,16 +129,31 @@ open Sast
 		| hd::[] ->	print_stmt hd; print_string "\n";
 		| hd::tl -> print_stmt hd; print_string "\n"; print_stmt_list tl;;
 
-	let rec print_sndecl  (f : Sast.sndecl) = match f with
-		|_ ->
-		print_string "def ";
-		print_string f.nname; 
-		print_string "(";
-		print_string "): \n";
-		print_stmt_list (List.rev f.sbody);
-		print_string "\texit()\n";;
+	let rec print_sndecl  (f : Sast.sndecl list)(v: Sast.svdecl list) = match f with
+		[] -> print_string "";
+		| hd::[] ->	
+			print_string "def ";
+			print_string hd.nname; 
+			print_string "(";
+			print_string "): \n";
+			print_globals v;
+			print_stmt_list (List.rev hd.sbody);
+			print_string "\texit()\n";
+		| hd::tl -> 
+			print_string "def ";
+			print_string hd.nname; 
+			print_string "(";
+			print_string "):";
+			print_globals v;
+			print_stmt_list (List.rev hd.sbody);
+			print_string "\texit()\n";
+			print_sndecl tl v;
+			print_string "";
 		(*List.iter print_stmt (List.rev f.sbody);*)
-
+	and print_globals (v:Sast.svdecl list) = match v with
+		[] -> print_string "";
+		| hd::[] ->	print_string("\n\tglobal "); print_string hd.svname; print_string ";\n";
+		| hd::tl -> print_string("\n\tglobal "); print_string hd.svname; print_string ";"; print_globals tl;;
 	let rec print_sfdecl  (f : Sast.sfdecl) = match f with
 		|_ ->
 		print_string "def ";
@@ -145,5 +166,5 @@ open Sast
 	let translate (variables, functions, nodes) =
 		List.iter print_svdecl (List.rev variables);
 		List.iter print_sfdecl (List.rev functions);
-		List.iter print_sndecl (List.rev nodes);
+		print_sndecl nodes variables;
 		print_string "if __name__ == '__main__':\n\tmain()";

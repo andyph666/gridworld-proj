@@ -186,7 +186,9 @@ let rec check_stmt (scope : symbol_table) (stmt : Ast.stmt) = match stmt with
 	| Goto(e) ->
 		let expr = check_expr_nodes scope e in
 						SGoto(expr)
-	| Read -> SRead
+	| ReadInt(e) -> SReadInt(check_expr scope e)
+	| ReadStr(e) -> SReadStr(check_expr scope e)
+
 
 			
 and  check_stmt_list (scope : symbol_table) (stml : Ast.stmt list) =
