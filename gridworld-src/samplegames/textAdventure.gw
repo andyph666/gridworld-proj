@@ -1,0 +1,91 @@
+int botDrawerLooted = 0;
+int topDrawerLooted = 0;
+int haveCigs=0;
+int haveLighter =0;
+int havePoison = 0;
+int triedButton = 0;
+main{
+    goto(start);
+}
+node start{
+   print("You wake up in a derelict room with no memory of last night");
+   print("You shiver as the biting cold from a dripping air conditioner assaults your bare skin");
+   goto(room);
+}
+
+node room{
+    if(havePoison != 1){
+       print("You spot a steel door to your left, a nightstand on your right, and a large red button on the ceiling.");
+       list("Try the door","Check the nightstand","Press the button");
+       choose(door1,nightstand1,button1);
+   }
+   else{
+        print("You spot a steel door to your left, a nightstand on your right, and a large red button on the ceiling.");
+       list("Try the door","Check the nightstand","Press the button","Consume the contents of the jar");
+       choose(door1,nightstand1,button1,die);
+   }
+}
+node door1{
+    print("You grab the handle firmly and push, but the door stays shut");
+    goto(room);
+}
+node nightstand1{
+    print("A curiously ornate nightstand, with gilded etchings lining the side");
+    print("Two drawers present themselves");
+    list("Check the top drawer","Check the bottom drawer","Step away");
+    choose(topdrawer,bottomdrawer, room);
+}
+node topdrawer{
+    if( topDrawerLooted ==0){
+        print("You find a lighter and a pack of cigarettes");
+        topDrawerLooted = 1;
+        havLighter = 1;
+        haveCigs = 1;
+        }
+    else{
+        print("There's nothing in here");
+    }
+    goto(nightstand1);
+}
+node bottomdrawer{
+    if(botDrawerLooted==0){
+        print("You find a large instect that promptly crawls away");
+        print("Underneath is a jar with mysterious contents");
+        botDrawerLooted = 1;
+        havePoison =1;
+        }
+    else{
+        print("There's nothing in here");
+    }
+    goto(nightstand1);
+}
+
+node button1{
+    if(triedButton ==1){
+        goto(button2);
+    }
+    print("You stare at the button apprehensively, then tender a hesitant poke");
+    print("Nothing really happens");
+    list("Go back","Try again");
+    triedButton=1;
+    choose (room,button1);
+}
+node button2{
+    if( triedButton ==2){
+        goto(button3);
+    }
+    print("You press the button again");
+    print("Nothing really happens");
+    list("Go back","Try again");
+    triedButton=2;
+    choose (room,button2);
+}
+node button3{
+    print("You press the button again, with the force of a thousand men");
+    print("Suddenly, POOT, the button sinks into its groove");
+    print("Curious as to what happens? To be continued...");
+}
+node die{
+    print("Regret flashes through your mind as the smell of almonds and the taste of arsenic fills your senses");
+    print("You died.");
+}

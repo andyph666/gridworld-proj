@@ -1,6 +1,14 @@
+#README
+#Andrew Phan, Zikai Lin, Loren Weng, Andrew Phan
+#Gridworld README and how to use
+
 How to run:
 type make
-then ./playgw test.gw
+./gw <samplegames/textAdventure.gw > output.py 2>&1  # or replace textAdventure with another name.
+python output.py
+
+Testing is done via:
+make test or ./testall.sh
 
 Makefile generated with:
 ocamldep options *.mli *.ml > .depend

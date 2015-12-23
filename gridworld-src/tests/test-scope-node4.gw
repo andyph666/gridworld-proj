@@ -1,0 +1,33 @@
+int e = 5;
+int function test() {
+	x = 3;
+	print("test again");
+	print("cool");
+	return 0;
+}
+main{
+	print("hello world");
+	x=10;
+	e = 10;
+	if(e>2){
+		print("hi");
+	}
+	else{
+		print("NO");
+	}
+	test();
+	goto(test2);
+	list("lol","i'm","cool");
+	while(e==10){
+		x=x+2;
+		e= e-2;
+	}
+	choose(test2,test3);
+	print("this doesn't work");
+}
+node test2{
+	print("you made it");
+}
+node test3{
+	print("you made it");
+}

@@ -1,0 +1,43 @@
+int gold = 0;
+string name = "";
+main{
+    goto(start);
+}
+node start{
+    print ("welcome to the game!");
+    print ("enter your name:");
+    readName = "";
+    readStr(readName);
+    name = readName;
+    print("\ngreetings");
+    print(readName);
+    print("\nHow much gold do you want?");
+    readInt(gold);
+    list("go to the store","go home");
+    choose(store,lose);
+}
+node store{
+    print ("you are in the store");
+    print ("you have: ");
+    print(gold);
+    print("gold");
+    list("buy a sandwich (20g)","win (0g)");
+    choose(sandwich,win);
+}
+node sandwich{
+    if (gold>20){
+        print("you bought a sandwich");
+        gold = gold-20;
+    }
+    else{
+        print("you can't afford a sandwich...");
+    }
+    goto(store);
+}
+node win{
+    print("you win!\nCongratulations!");
+    print(name);
+}
+node lose{
+    print ("Who goes home as a first choice? You lose");
+}
