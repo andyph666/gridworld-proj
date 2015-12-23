@@ -1,0 +1,10 @@
+int i = 0;
+node test1{
+	if (i == 0){
+		print("yes");
+		print(i+1);
+	}
+}
+main{
+	goto(test1);
+}

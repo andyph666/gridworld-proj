@@ -1,7 +1,6 @@
+string i = "boss";
+string j = "enemy";
 main{
-	string i = "boss";
-	string j = "enemy";
-
 	i = "boss1";
 	j = "enemy1";
 

@@ -1,9 +1,10 @@
+int i = 0;
+int function printall(int a, int b, int c){
+	print(a);
+	print(b);
+	print(c);
+	return 0;
+}
 main{
-	void printall(int a, int b, int c){
-		print(a);
-		print(b);
-		print(c);
-	}
-
 	printall(3,5,9);
 }

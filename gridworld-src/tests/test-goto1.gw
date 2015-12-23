@@ -1,0 +1,7 @@
+int i = 0;
+node test1{
+	print("OK");
+}
+main{
+	goto(test1);
+}

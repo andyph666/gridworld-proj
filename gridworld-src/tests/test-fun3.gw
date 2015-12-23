@@ -1,15 +1,15 @@
-main{
-	bool printall(int a, int b, int c){
-		print(a);
-		print(b);
-		print(c);
-		return(True)
-	}
-	int foo(){
-		bool a = False;
-		a = printall(3,5,9);
-		print(a);
-	}
+string i = "print";
 
+string function printall(int a, int b, int c){
+	print(a);
+	print(b);
+	print(c);
+	return "print";
+}
+int function foo(){
+	if(i == "print"){ printall(3,5,9);}
+	return 0;
+}
+main{
 	foo();
 }

@@ -1,19 +1,21 @@
-main{
-	int a = 10;
-	int b = 15;
+int a = 10;
+int b = 15;
+
+int function foo(int sum){
+	a = 5;
+	b = 10;
+	a = a + 1;
+	b = b + 1;
+	sum = a + b;
 	print(a);
 	print(b);
+	print(sum);
+	return 0;
+}
 
-	int foo(int sum){
-		int a = 5;
-		int b = 10;
-		a = a + 1;
-		b = b + 1;
-		sum = a + b;
-		print(a);
-		print(b);
-		print(sum);
-	}
+main{
+	print(a);
+	print(b);
 
 	foo(0);
 }

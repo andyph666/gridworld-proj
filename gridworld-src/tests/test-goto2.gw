@@ -1,0 +1,23 @@
+int i = 0;
+node test1{
+	if (i == 0) {goto(result1);}
+	goto(result2);
+}
+
+node result1{
+	print("1");
+	goto(end);
+}
+
+node result2{
+	print("2");
+	goto(end);
+}
+
+node end{
+	print("end");
+}
+
+main{
+	goto(test1);
+}

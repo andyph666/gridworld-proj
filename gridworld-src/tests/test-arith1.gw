@@ -1,8 +1,0 @@
-int a = 33;
-int b = 27;
-c = a + b;
-d = a - b;
-e = a * b;
-print(c);
-print(d);
-print(e);

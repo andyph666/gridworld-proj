@@ -1,7 +1,6 @@
+int a = 0;
+string b = "hello";
 main{
-	int a = 0;
-	string b = "hello";
-
 	a = 10;
 	b = "hello123";
 

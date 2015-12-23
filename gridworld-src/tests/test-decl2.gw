@@ -1,8 +1,9 @@
 int a;
 string b;
+main{
+	a = 10;
+	b = "hello123";
 
-a = 10;
-b = "hello123";
-
-print(a);
-print(b);
+	print(a);
+	print(b);
+}

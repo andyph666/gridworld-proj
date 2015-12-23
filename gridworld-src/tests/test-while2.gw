@@ -1,9 +1,0 @@
-main{
-	int i = 5;
-	while (i > 0) {
-	if (i==2) { break; }
-	print(i);
-	i = i - 1;
-	}
-	print("over");
-}

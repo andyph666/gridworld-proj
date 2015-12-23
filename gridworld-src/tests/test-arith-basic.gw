@@ -1,3 +1,4 @@
+int i = 0;
 main{
 	print(33 + 27 - 10);
 	print(5 * 8 / 4);

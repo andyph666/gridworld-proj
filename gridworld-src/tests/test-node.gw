@@ -1,11 +1,12 @@
+int i = 0;
 node start{
-	goto(print)
+	goto(print1);
 }
 
-node print{
-	print("node")
+node print1{
+	print("node");
 }
 
 main{
-	goto(start)
+	goto(start);
 }
